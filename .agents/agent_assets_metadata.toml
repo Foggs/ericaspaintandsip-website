@@ -1,0 +1,44 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "nOH4r39GhipYcXmHsiBZA"
+uri = "file://artifacts/paint-and-sip/public/images/hero.png"
+type = "image"
+title = "Paint and sip hero"
+
+[[generated]]
+id = "oWZiqqtMR78Mz8qCc1C4F"
+uri = "file://artifacts/paint-and-sip/public/images/event-1.png"
+type = "image"
+title = "Event cover 1"
+
+[[generated]]
+id = "AuXRxLoajaFX3sV7wfZvR"
+uri = "file://artifacts/paint-and-sip/public/images/event-2.png"
+type = "image"
+title = "Event cover 2"
+
+[[generated]]
+id = "ByJiuUS9-Ow9yTOXXTrR7"
+uri = "file://artifacts/paint-and-sip/public/images/gallery-1.png"
+type = "image"
+title = "Gallery photo 1"
+
+[[generated]]
+id = "96mvPa-dZv_cNzK8lImrt"
+uri = "file://artifacts/paint-and-sip/public/images/gallery-2.png"
+type = "image"
+title = "Gallery photo 2"
+
+[[generated]]
+id = "n2WlS3oYjROlWWGdEkb01"
+uri = "file://artifacts/paint-and-sip/public/images/gallery-3.png"
+type = "image"
+title = "Gallery photo 3"
+
+[[generated]]
+id = "7k4OrldmdSyQRRMoocZyq"
+uri = "file://artifacts/paint-and-sip/public/images/blog-1.png"
+type = "image"
+title = "Blog post cover"

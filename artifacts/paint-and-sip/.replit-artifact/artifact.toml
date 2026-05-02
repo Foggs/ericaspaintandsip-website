@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Erica's Paint & Sip"
+version = "1.0.0"
+id = "artifacts/paint-and-sip"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 26008
+
+[services.development]
+run = "pnpm --filter @workspace/paint-and-sip run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/paint-and-sip", "run", "build" ]
+publicDir = "artifacts/paint-and-sip/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "26008"
+BASE_PATH = "/"

@@ -3,20 +3,32 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Erica's Paint & Sip API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: events
+    description: Public events
+  - name: bookings
+    description: Event bookings
+  - name: private-inquiries
+    description: Private event inquiries
+  - name: gallery
+    description: Photo gallery
+  - name: posts
+    description: Blog posts
+  - name: newsletter
+    description: Newsletter subscribers
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +36,655 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ── Events ──────────────────────────────────────────────────────────────────
+  /events:
+    get:
+      operationId: listEvents
+      tags: [events]
+      summary: List all published events
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 12
+        - name: upcoming
+          in: query
+          description: Only return future events
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Paginated list of events
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventListResponse"
+    post:
+      operationId: createEvent
+      tags: [events]
+      summary: Create a new event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEventBody"
+      responses:
+        "201":
+          description: Created event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+
+  /events/upcoming:
+    get:
+      operationId: getUpcomingEvents
+      tags: [events]
+      summary: Get next N upcoming events (homepage widget)
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 3
+      responses:
+        "200":
+          description: Upcoming events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+
+  /events/summary:
+    get:
+      operationId: getEventsSummary
+      tags: [events]
+      summary: Aggregate stats — total events, upcoming count, total bookings
+      responses:
+        "200":
+          description: Events summary stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventsSummary"
+
+  /events/{id}:
+    get:
+      operationId: getEvent
+      tags: [events]
+      summary: Get event by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Event detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+        "404":
+          description: Not found
+    put:
+      operationId: updateEvent
+      tags: [events]
+      summary: Update an event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEventBody"
+      responses:
+        "200":
+          description: Updated event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+    delete:
+      operationId: deleteEvent
+      tags: [events]
+      summary: Delete an event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /events/{slug}/by-slug:
+    get:
+      operationId: getEventBySlug
+      tags: [events]
+      summary: Get event by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Event detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+        "404":
+          description: Not found
+
+  # ── Bookings ─────────────────────────────────────────────────────────────────
+  /bookings:
+    get:
+      operationId: listBookings
+      tags: [bookings]
+      summary: List all bookings
+      parameters:
+        - name: eventId
+          in: query
+          schema:
+            type: integer
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, paid, cancelled]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Paginated bookings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingListResponse"
+    post:
+      operationId: createBooking
+      tags: [bookings]
+      summary: Create a booking (called after PayPal success)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBookingBody"
+      responses:
+        "201":
+          description: Created booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /bookings/{id}:
+    get:
+      operationId: getBooking
+      tags: [bookings]
+      summary: Get booking by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Booking detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+    patch:
+      operationId: updateBookingStatus
+      tags: [bookings]
+      summary: Update booking status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBookingStatusBody"
+      responses:
+        "200":
+          description: Updated booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  # ── Private Inquiries ────────────────────────────────────────────────────────
+  /private-inquiries:
+    get:
+      operationId: listPrivateInquiries
+      tags: [private-inquiries]
+      summary: List all private event inquiries
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Paginated inquiries
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrivateInquiryListResponse"
+    post:
+      operationId: createPrivateInquiry
+      tags: [private-inquiries]
+      summary: Submit a private event inquiry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePrivateInquiryBody"
+      responses:
+        "201":
+          description: Created inquiry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrivateInquiry"
+
+  /private-inquiries/{id}:
+    get:
+      operationId: getPrivateInquiry
+      tags: [private-inquiries]
+      summary: Get inquiry by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Inquiry detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrivateInquiry"
+    delete:
+      operationId: deletePrivateInquiry
+      tags: [private-inquiries]
+      summary: Delete an inquiry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ── Gallery ──────────────────────────────────────────────────────────────────
+  /gallery:
+    get:
+      operationId: listGalleryPhotos
+      tags: [gallery]
+      summary: List gallery photos
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 24
+      responses:
+        "200":
+          description: Paginated gallery photos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GalleryPhotoListResponse"
+    post:
+      operationId: createGalleryPhoto
+      tags: [gallery]
+      summary: Add a gallery photo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGalleryPhotoBody"
+      responses:
+        "201":
+          description: Created photo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GalleryPhoto"
+
+  /gallery/featured:
+    get:
+      operationId: getFeaturedGalleryPhotos
+      tags: [gallery]
+      summary: Get featured photos for the homepage (top by sortOrder)
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 6
+      responses:
+        "200":
+          description: Featured photos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GalleryPhoto"
+
+  /gallery/categories:
+    get:
+      operationId: getGalleryCategories
+      tags: [gallery]
+      summary: List distinct gallery categories
+      responses:
+        "200":
+          description: Category list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /gallery/{id}:
+    get:
+      operationId: getGalleryPhoto
+      tags: [gallery]
+      summary: Get gallery photo by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Gallery photo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GalleryPhoto"
+    put:
+      operationId: updateGalleryPhoto
+      tags: [gallery]
+      summary: Update a gallery photo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGalleryPhotoBody"
+      responses:
+        "200":
+          description: Updated photo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GalleryPhoto"
+    delete:
+      operationId: deleteGalleryPhoto
+      tags: [gallery]
+      summary: Delete a gallery photo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ── Blog Posts ───────────────────────────────────────────────────────────────
+  /posts:
+    get:
+      operationId: listPosts
+      tags: [posts]
+      summary: List published blog posts
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Paginated posts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostListResponse"
+    post:
+      operationId: createPost
+      tags: [posts]
+      summary: Create a blog post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePostBody"
+      responses:
+        "201":
+          description: Created post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+
+  /posts/recent:
+    get:
+      operationId: getRecentPosts
+      tags: [posts]
+      summary: Get most recent posts for homepage
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 3
+      responses:
+        "200":
+          description: Recent posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+
+  /posts/{id}:
+    get:
+      operationId: getPost
+      tags: [posts]
+      summary: Get post by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Post detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+    put:
+      operationId: updatePost
+      tags: [posts]
+      summary: Update a blog post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePostBody"
+      responses:
+        "200":
+          description: Updated post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+    delete:
+      operationId: deletePost
+      tags: [posts]
+      summary: Delete a post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /posts/{slug}/by-slug:
+    get:
+      operationId: getPostBySlug
+      tags: [posts]
+      summary: Get post by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Post detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "404":
+          description: Not found
+
+  # ── Newsletter ───────────────────────────────────────────────────────────────
+  /newsletter/subscribe:
+    post:
+      operationId: subscribeNewsletter
+      tags: [newsletter]
+      summary: Subscribe to the newsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscribeNewsletterBody"
+      responses:
+        "201":
+          description: Subscribed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsletterSubscriber"
+        "409":
+          description: Email already subscribed
+
+  /newsletter/subscribers:
+    get:
+      operationId: listNewsletterSubscribers
+      tags: [newsletter]
+      summary: List newsletter subscribers
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        "200":
+          description: Paginated subscribers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsletterSubscriberListResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +692,391 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    # ── Pagination ─────────────────────────────────────────────────────────────
+    PaginationMeta:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        totalPages:
+          type: integer
+      required: [page, limit, total, totalPages]
+
+    # ── Event ──────────────────────────────────────────────────────────────────
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        date:
+          type: string
+          format: date-time
+        durationMinutes:
+          type: integer
+          nullable: true
+        location:
+          type: string
+          nullable: true
+        price:
+          type: number
+          nullable: true
+        capacity:
+          type: integer
+          nullable: true
+        seatsAvailable:
+          type: integer
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        coverImageUrl:
+          type: string
+          nullable: true
+        isPublished:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, title, slug, date, isPublished, createdAt]
+
+    CreateEventBody:
+      type: object
+      properties:
+        title:
+          type: string
+        date:
+          type: string
+          format: date-time
+        durationMinutes:
+          type: integer
+          nullable: true
+        location:
+          type: string
+          nullable: true
+        price:
+          type: number
+          nullable: true
+        capacity:
+          type: integer
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        coverImageUrl:
+          type: string
+          nullable: true
+        isPublished:
+          type: boolean
+          default: false
+      required: [title, date]
+
+    EventListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Event"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+      required: [data, meta]
+
+    EventsSummary:
+      type: object
+      properties:
+        totalEvents:
+          type: integer
+        upcomingEvents:
+          type: integer
+        totalBookings:
+          type: integer
+        totalRevenue:
+          type: number
+      required: [totalEvents, upcomingEvents, totalBookings, totalRevenue]
+
+    # ── Booking ────────────────────────────────────────────────────────────────
+    Booking:
+      type: object
+      properties:
+        id:
+          type: integer
+        eventId:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        seats:
+          type: integer
+        paypalOrderId:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [pending, paid, cancelled]
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, eventId, name, email, seats, status, createdAt]
+
+    CreateBookingBody:
+      type: object
+      properties:
+        eventId:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        seats:
+          type: integer
+        paypalOrderId:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [pending, paid, cancelled]
+          default: pending
+      required: [eventId, name, email, seats]
+
+    UpdateBookingStatusBody:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [pending, paid, cancelled]
+      required: [status]
+
+    BookingListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Booking"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+      required: [data, meta]
+
+    # ── Private Inquiry ────────────────────────────────────────────────────────
+    PrivateInquiry:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        preferredDate:
+          type: string
+          format: date
+          nullable: true
+        guestCount:
+          type: integer
+          nullable: true
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, name, email, phone, message, createdAt]
+
+    CreatePrivateInquiryBody:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        preferredDate:
+          type: string
+          format: date
+          nullable: true
+        guestCount:
+          type: integer
+          nullable: true
+        message:
+          type: string
+      required: [name, email, phone, message]
+
+    PrivateInquiryListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/PrivateInquiry"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+      required: [data, meta]
+
+    # ── Gallery Photo ──────────────────────────────────────────────────────────
+    GalleryPhoto:
+      type: object
+      properties:
+        id:
+          type: integer
+        imageUrl:
+          type: string
+        caption:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        sortOrder:
+          type: integer
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, imageUrl, createdAt]
+
+    CreateGalleryPhotoBody:
+      type: object
+      properties:
+        imageUrl:
+          type: string
+        caption:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        sortOrder:
+          type: integer
+          nullable: true
+      required: [imageUrl]
+
+    GalleryPhotoListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/GalleryPhoto"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+      required: [data, meta]
+
+    # ── Post ───────────────────────────────────────────────────────────────────
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        publishedDate:
+          type: string
+          format: date
+          nullable: true
+        excerpt:
+          type: string
+          nullable: true
+        content:
+          type: string
+          nullable: true
+        coverImageUrl:
+          type: string
+          nullable: true
+        isPublished:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, title, slug, isPublished, createdAt]
+
+    CreatePostBody:
+      type: object
+      properties:
+        title:
+          type: string
+        publishedDate:
+          type: string
+          format: date
+          nullable: true
+        excerpt:
+          type: string
+          nullable: true
+        content:
+          type: string
+          nullable: true
+        coverImageUrl:
+          type: string
+          nullable: true
+        isPublished:
+          type: boolean
+          default: false
+      required: [title]
+
+    PostListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+      required: [data, meta]
+
+    # ── Newsletter ─────────────────────────────────────────────────────────────
+    NewsletterSubscriber:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          nullable: true
+        email:
+          type: string
+        subscribedAt:
+          type: string
+          format: date-time
+      required: [id, email, subscribedAt]
+
+    SubscribeNewsletterBody:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        email:
+          type: string
+      required: [email]
+
+    NewsletterSubscriberListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/NewsletterSubscriber"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+      required: [data, meta]
