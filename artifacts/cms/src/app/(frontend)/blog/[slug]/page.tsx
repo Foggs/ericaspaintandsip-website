@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { PostContent } from '@/components/blog/PostContent'
 import { getPayloadClient } from '@/lib/payload'
+import { absoluteUrl } from '@/lib/seo'
 import type { Post } from '@payload-types'
 
 export const dynamic = 'force-dynamic'
@@ -32,11 +33,23 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params
   const post = await findPost(slug)
   if (!post) return { title: 'Post not found' }
+  const title = post.title
   const description =
     post.excerpt ?? `Posted ${dateFormatter.format(new Date(post.publishedDate))}`
+  const url = absoluteUrl(`/blog/${post.slug}`)
+  const publishedTime = new Date(post.publishedDate).toISOString()
   return {
-    title: `${post.title} — Erica's Paint & Sip`,
+    title,
     description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: 'article',
+      publishedTime,
+    },
+    twitter: { title, description },
   }
 }
 

@@ -1,10 +1,18 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ContactInfo } from '@/components/layout/ContactInfo'
+import { absoluteUrl } from '@/lib/seo'
+
+const title = 'Contact'
+const description = "Get in touch with Erica's Paint & Sip in Sterling Heights, MI."
+const url = absoluteUrl('/contact')
 
 export const metadata: Metadata = {
-  title: "Contact — Erica's Paint & Sip",
-  description: "Get in touch with Erica's Paint & Sip in Sterling Heights, MI.",
+  title,
+  description,
+  alternates: { canonical: url },
+  openGraph: { title, description, url, type: 'website' },
+  twitter: { title, description },
 }
 
 export default function ContactPage() {

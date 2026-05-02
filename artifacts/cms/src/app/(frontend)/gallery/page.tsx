@@ -3,12 +3,21 @@ import type { GalleryPhoto, Media } from '@payload-types'
 import { GalleryGrid, type GalleryCategory } from '@/components/gallery/GalleryGrid'
 import type { LightboxPhoto } from '@/components/gallery/GalleryLightbox'
 import { getPayloadClient } from '@/lib/payload'
+import { absoluteUrl } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
+const title = 'Gallery'
+const description =
+  'Photos from our paint-and-sip events, finished paintings, and behind-the-scenes moments.'
+const url = absoluteUrl('/gallery')
+
 export const metadata: Metadata = {
-  title: "Gallery — Erica's Paint & Sip",
-  description: 'Photos from our paint-and-sip events, paintings, and behind the scenes.',
+  title,
+  description,
+  alternates: { canonical: url },
+  openGraph: { title, description, url, type: 'website' },
+  twitter: { title, description },
 }
 
 function isMedia(value: GalleryPhoto['image']): value is Media {

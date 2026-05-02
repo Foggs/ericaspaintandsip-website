@@ -1,12 +1,20 @@
 import type { Metadata } from 'next'
 import { PostCard } from '@/components/blog/PostCard'
 import { getPayloadClient } from '@/lib/payload'
+import { absoluteUrl } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
+const title = 'Blog'
+const description = 'News, tips, and behind-the-scenes updates from the studio.'
+const url = absoluteUrl('/blog')
+
 export const metadata: Metadata = {
-  title: "Blog — Erica's Paint & Sip",
-  description: 'News and updates from the studio.',
+  title,
+  description,
+  alternates: { canonical: url },
+  openGraph: { title, description, url, type: 'website' },
+  twitter: { title, description },
 }
 
 export default async function BlogPage() {

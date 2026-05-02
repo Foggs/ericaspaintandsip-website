@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { EventDetail } from '@/components/events/EventDetail'
 import { getPayloadClient } from '@/lib/payload'
+import { absoluteUrl } from '@/lib/seo'
 import type { Event } from '@payload-types'
 
 export const dynamic = 'force-dynamic'
@@ -34,9 +35,20 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const event = await findEvent(slug)
   if (!event) return { title: 'Event not found' }
   const when = dateFormatter.format(new Date(event.date))
+  const title = event.title
+  const description = `${event.title} on ${when}${event.location ? ` at ${event.location}` : ''}.`
+  const url = absoluteUrl(`/events/${event.slug}`)
   return {
-    title: `${event.title} — Erica's Paint & Sip`,
-    description: `${event.title} on ${when}${event.location ? ` at ${event.location}` : ''}.`,
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: 'article',
+    },
+    twitter: { title, description },
   }
 }
 
