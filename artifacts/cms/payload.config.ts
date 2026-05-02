@@ -6,6 +6,7 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { Events } from './collections/Events.js'
 import { Media } from './collections/Media.js'
 import { PrivateInquiries } from './collections/PrivateInquiries.js'
+import { Bookings } from './collections/Bookings.js'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -30,6 +31,7 @@ export default buildConfig({
     Events,
     Media,
     PrivateInquiries,
+    Bookings,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

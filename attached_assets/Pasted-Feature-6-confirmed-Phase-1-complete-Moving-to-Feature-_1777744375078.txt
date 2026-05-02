@@ -1,0 +1,42 @@
+Feature 6 confirmed. Phase 1 complete. Moving to Feature 7 — PayPal Event Registration.
+
+Reference files: CLAUDE.md, replit.md, ericaspaintandsip_PRD.md (Section 4.3)
+
+## Feature: PayPal Event Registration
+
+### Description
+Wire the registration form on /cms/events/[slug] to PayPal Orders API v2.
+On successful payment capture, create a Booking record in Payload and send a
+confirmation email to the customer.
+
+### Files Involved
+- artifacts/cms/src/app/api/paypal/create-order/route.ts (new)
+- artifacts/cms/src/app/api/paypal/capture-order/route.ts (new)
+- artifacts/cms/collections/Bookings.ts (new)
+- artifacts/cms/payload.config.ts (register Bookings collection)
+- artifacts/cms/components/forms/RegistrationForm.tsx (add PayPal JS SDK + submit logic)
+- artifacts/cms/lib/paypal.ts (new — PayPal API helpers)
+- artifacts/cms/lib/email.ts (add booking confirmation email templates)
+
+### Constraints
+- Use PayPal Orders API v2 — not legacy NVP/SOAP
+- Price MUST be derived server-side from the Event record before creating the order
+  — never trust any amount passed from the client
+- Booking record is created ONLY after successful server-side capture — never before
+- PAYPAL_CLIENT_SECRET must never appear in any client-side code
+- NEXT_PUBLIC_PAYPAL_CLIENT_ID is safe to use in the PayPal JS SDK script tag
+- PayPal cancel (user backs out) must be handled gracefully — no Booking created, no error shown to user
+- Booking status field: 'pending' | 'paid' | 'cancelled'
+- Do NOT modify the Events collection fields
+
+### Acceptance Criteria
+- [ ] Clicking Register on an event detail page opens the PayPal payment flow
+- [ ] Completing payment creates a Booking record in Payload with status: paid
+- [ ] Customer receives a booking confirmation email
+- [ ] Admin receives a notification email with booking details
+- [ ] Cancelling PayPal returns user to the event page cleanly with no error
+- [ ] Submitting 0 or negative seats is rejected before PayPal is invoked
+- [ ] Duplicate paypalOrderIds are rejected (idempotency — check before creating Booking)
+- [ ] No TypeScript errors
+
+PLAN ONLY. Show every file you intend to create or modify. I will approve before you implement.

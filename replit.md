@@ -82,8 +82,21 @@ and Payload together. Registered as a workspace artifact at preview path
   `@/lib/*` → `./lib/*`, `@/components/*` → `./components/*`.
 - **Collections**: `users` (Payload auth), `events`, `media`,
   `private-inquiries` (public create, admin read/update/delete; stored in
-  the `payload` Postgres schema).
+  the `payload` Postgres schema), `bookings` (server-side create only via
+  PayPal capture route — `access.create: () => false` blocks public REST;
+  `paypalOrderId` is `unique` + `index` for idempotency).
 - **Frontend routes**: `/cms`, `/cms/events`, `/cms/events/[slug]`,
-  `/cms/private-events`. Custom API: `POST /cms/api/private-inquiry`.
+  `/cms/private-events`. Custom APIs: `POST /cms/api/private-inquiry`,
+  `POST /cms/api/paypal/create-order`, `POST /cms/api/paypal/capture-order`.
 - **Dependencies added beyond the Payload defaults**: `nodemailer` (+
-  `@types/nodemailer`).
+  `@types/nodemailer`), `@paypal/react-paypal-js`.
+- **PayPal**: server-side helpers in `lib/paypal.ts` use the PayPal Orders
+  API v2 directly via `fetch` (no server SDK — PayPal deprecated
+  `@paypal/checkout-server-sdk`). Env vars: `PAYPAL_CLIENT_ID`,
+  `PAYPAL_CLIENT_SECRET`, `NEXT_PUBLIC_PAYPAL_CLIENT_ID` (safe to expose),
+  `PAYPAL_ENV` (`sandbox` default, `live` for production). Without
+  credentials, the `RegistrationForm` renders a disabled "online
+  registration is being set up" panel and the create-order API returns
+  503; the rest of the site keeps working. Booking creation only happens
+  after a `COMPLETED` capture and a server-side amount-match check
+  against `event.price * seats`.
