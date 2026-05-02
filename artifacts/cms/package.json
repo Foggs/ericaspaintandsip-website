@@ -13,11 +13,13 @@
     "@payloadcms/next": "3.84.1",
     "@payloadcms/richtext-lexical": "3.84.1",
     "graphql": "^16.11.0",
+    "monaco-editor": "^0.55.1",
     "next": "15.2.9",
     "payload": "3.84.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "sharp": "^0.34.2"
+    "sharp": "^0.34.2",
+    "yjs": "^13.6.30"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

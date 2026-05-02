@@ -243,16 +243,16 @@
       "static/chunks/_app-pages-browser_node_modules_pnpm_date-fns_4_1_0_node_modules_date-fns_locale_zh-TW_js.js"
     ]
   },
-  "../../../node_modules/.pnpm/@payloadcms+ui@3.84.1_@types+react@19.2.14_next@15.2.9_react-dom@19.1.0_react@19.1.0__r_bf08339e1519c0b137facace5a13bd2a/node_modules/@payloadcms/ui/dist/exports/client/index.js -> ./CodeEditor-67I2RYO2.js": {
-    "id": "../../../node_modules/.pnpm/@payloadcms+ui@3.84.1_@types+react@19.2.14_next@15.2.9_react-dom@19.1.0_react@19.1.0__r_bf08339e1519c0b137facace5a13bd2a/node_modules/@payloadcms/ui/dist/exports/client/index.js -> ./CodeEditor-67I2RYO2.js",
+  "../../../node_modules/.pnpm/@payloadcms+ui@3.84.1_@types+react@19.2.14_monaco-editor@0.55.1_next@15.2.9_react-dom@1_662a06e54723c9304dbb6c2a289c552f/node_modules/@payloadcms/ui/dist/exports/client/index.js -> ./CodeEditor-67I2RYO2.js": {
+    "id": "../../../node_modules/.pnpm/@payloadcms+ui@3.84.1_@types+react@19.2.14_monaco-editor@0.55.1_next@15.2.9_react-dom@1_662a06e54723c9304dbb6c2a289c552f/node_modules/@payloadcms/ui/dist/exports/client/index.js -> ./CodeEditor-67I2RYO2.js",
     "files": [
-      "static/chunks/_app-pages-browser_node_modules_pnpm_payloadcms_ui_3_84_1__types_react_19_2_14_next_15_2_9_re-5e1765.js"
+      "static/chunks/_app-pages-browser_node_modules_pnpm_payloadcms_ui_3_84_1__types_react_19_2_14_monaco-editor_-b2bf4c.js"
     ]
   },
-  "../../../node_modules/.pnpm/@payloadcms+ui@3.84.1_@types+react@19.2.14_next@15.2.9_react-dom@19.1.0_react@19.1.0__r_bf08339e1519c0b137facace5a13bd2a/node_modules/@payloadcms/ui/dist/exports/client/index.js -> ./DatePicker-T2DMDMM5.js": {
-    "id": "../../../node_modules/.pnpm/@payloadcms+ui@3.84.1_@types+react@19.2.14_next@15.2.9_react-dom@19.1.0_react@19.1.0__r_bf08339e1519c0b137facace5a13bd2a/node_modules/@payloadcms/ui/dist/exports/client/index.js -> ./DatePicker-T2DMDMM5.js",
+  "../../../node_modules/.pnpm/@payloadcms+ui@3.84.1_@types+react@19.2.14_monaco-editor@0.55.1_next@15.2.9_react-dom@1_662a06e54723c9304dbb6c2a289c552f/node_modules/@payloadcms/ui/dist/exports/client/index.js -> ./DatePicker-T2DMDMM5.js": {
+    "id": "../../../node_modules/.pnpm/@payloadcms+ui@3.84.1_@types+react@19.2.14_monaco-editor@0.55.1_next@15.2.9_react-dom@1_662a06e54723c9304dbb6c2a289c552f/node_modules/@payloadcms/ui/dist/exports/client/index.js -> ./DatePicker-T2DMDMM5.js",
     "files": [
-      "static/chunks/_app-pages-browser_node_modules_pnpm_payloadcms_ui_3_84_1__types_react_19_2_14_next_15_2_9_re-9e3747.js"
+      "static/chunks/_app-pages-browser_node_modules_pnpm_payloadcms_ui_3_84_1__types_react_19_2_14_monaco-editor_-24ef27.js"
     ]
   }
 }
