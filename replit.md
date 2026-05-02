@@ -66,4 +66,24 @@ and Payload together. Registered as a workspace artifact at preview path
     `TypeError: Cannot read properties of undefined (reading 'some')`.
   - `src/app/(payload)/admin/importMap.js`
 - **Secrets**: `PAYLOAD_SECRET` (required), `DATABASE_URL` (auto-provided by
-  Replit Postgres).
+  Replit Postgres). Optional email vars (used by `lib/email.ts`):
+  `ADMIN_EMAIL`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`,
+  `EMAIL_FROM`. When SMTP is unset, `sendEmail()` logs the message to the
+  workflow logs instead of sending — forms still succeed end-to-end.
+- **Module resolution**: `package.json` sets `"type": "module"` so the
+  `payload` CLI (used by `pnpm run generate:types`) can load the ESM config.
+  Together with `next.config.mjs`'s `webpack.resolve.extensionAlias` mapping
+  `.js → .ts/.tsx`, all relative imports inside the artifact use explicit
+  `.js` extensions (e.g. `'./collections/Events.js'`). Both Next webpack and
+  TS resolve them to the underlying `.ts` file.
+- **Path aliases** (`tsconfig.json`): `@/*` → `./src/*`,
+  `@payload-config` → `./payload.config.ts`,
+  `@payload-types` → `./payload-types.ts`,
+  `@/lib/*` → `./lib/*`, `@/components/*` → `./components/*`.
+- **Collections**: `users` (Payload auth), `events`, `media`,
+  `private-inquiries` (public create, admin read/update/delete; stored in
+  the `payload` Postgres schema).
+- **Frontend routes**: `/cms`, `/cms/events`, `/cms/events/[slug]`,
+  `/cms/private-events`. Custom API: `POST /cms/api/private-inquiry`.
+- **Dependencies added beyond the Payload defaults**: `nodemailer` (+
+  `@types/nodemailer`).
