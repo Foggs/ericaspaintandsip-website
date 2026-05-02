@@ -1,11 +1,24 @@
+import type { Metadata } from 'next'
+import { Hero } from '@/components/layout/Hero'
+import { FeaturedEvents } from '@/components/events/FeaturedEvents'
+import { GalleryPreview } from '@/components/gallery/GalleryPreview'
+import { NewsletterSignup } from '@/components/forms/NewsletterSignup'
+
+export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: "Erica's Paint & Sip — Sterling Heights",
+  description:
+    'Paint nights, private parties, and team events in Sterling Heights, MI.',
+}
+
 export default function HomePage() {
   return (
-    <main style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
-      <h1>Erica&apos;s Paint &amp; Sip CMS</h1>
-      <p>
-        Scaffold is up. Visit{' '}
-        <a href="/cms/admin">/cms/admin</a> for the Payload admin panel.
-      </p>
-    </main>
+    <>
+      <Hero />
+      <FeaturedEvents />
+      <GalleryPreview />
+      <NewsletterSignup />
+    </>
   )
 }
