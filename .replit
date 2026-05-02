@@ -55,4 +55,3 @@ externalPort = 80
 [userenv]
 
 [userenv.shared]
-PAYLOAD_SECRET = "3cb63e060ab12b1795478990bd9f06f3116e1c8739eb8b9f5cfcbe98e05b10ad"

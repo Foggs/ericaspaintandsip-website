@@ -7,6 +7,20 @@ import { fileURLToPath } from "url";
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
+const payloadSecret = process.env.PAYLOAD_SECRET;
+if (!payloadSecret) {
+  throw new Error(
+    "PAYLOAD_SECRET environment variable is required. Please set it in Replit Secrets."
+  );
+}
+
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri) {
+  throw new Error(
+    "MONGODB_URI environment variable is required. Please set it in Replit Secrets."
+  );
+}
+
 export default buildConfig({
   admin: {
     user: "users",
@@ -17,18 +31,13 @@ export default buildConfig({
       auth: true,
       fields: [],
     },
-    {
-      slug: "media",
-      upload: true,
-      fields: [],
-    },
   ],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET ?? "fallback-secret-change-me",
+  secret: payloadSecret,
   typescript: {
     outputFile: path.resolve(dirname, "src/payload-types.ts"),
   },
   db: mongooseAdapter({
-    url: process.env.MONGODB_URI ?? "",
+    url: mongoUri,
   }),
 });
