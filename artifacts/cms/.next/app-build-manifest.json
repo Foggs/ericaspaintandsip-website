@@ -23,6 +23,11 @@
       "static/css/app/(payload)/admin/[[...segments]]/page.css",
       "static/chunks/app/(payload)/admin/[[...segments]]/page.js"
     ],
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
+    ],
     "/(payload)/api/[...slug]/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",

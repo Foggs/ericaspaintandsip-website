@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/cms"
+title = "CMS: Next.js + Payload"
+version = "1.0.0"
+id = "cms_4x8ijtuhuemoodz45f"
+
+[[services]]
+localPort = 3000
+name = "Next.js + Payload"
+paths = ["/cms"]
+
+[services.env]
+PORT = "3000"
+
+[services.development]
+run = "pnpm --filter @workspace/cms run dev"
+
+[services.production]
+
+[services.production.build]
+args = ["pnpm", "--filter", "@workspace/cms", "run", "build"]
+
+[services.production.build.env]
+NODE_ENV = "production"
+
+[services.production.run]
+args = ["pnpm", "--filter", "@workspace/cms", "run", "start"]
+
+[services.production.run.env]
+PORT = "3000"
+NODE_ENV = "production"
