@@ -9,11 +9,13 @@ export const metadata: Metadata = {
 
 export default function PrivateEventsPage() {
   return (
-    <main style={{ maxWidth: '720px', margin: '0 auto', padding: '2rem 1rem' }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Private Events</h1>
-      <p style={{ color: '#555', marginTop: 0, marginBottom: '1.5rem', lineHeight: 1.6 }}>
-        Hosting a birthday, bridal shower, or team event? Tell us a bit about
-        what you have in mind and we&apos;ll be in touch to plan the details.
+    <main className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
+      <h1 className="mb-2 font-display text-4xl font-semibold text-ink sm:text-5xl">
+        Private Events
+      </h1>
+      <p className="mb-6 leading-relaxed text-muted">
+        Hosting a birthday, bridal shower, or team event? Tell us a bit about what you have
+        in mind and we&apos;ll be in touch to plan the details.
       </p>
       <PrivateEventForm />
     </main>

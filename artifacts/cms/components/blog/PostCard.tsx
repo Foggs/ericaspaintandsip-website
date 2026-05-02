@@ -19,36 +19,28 @@ export function PostCard({ post }: Props) {
   return (
     <Link
       href={`/blog/${slug}`}
-      style={{
-        display: 'block',
-        border: '1px solid #e5e5e5',
-        borderRadius: '8px',
-        overflow: 'hidden',
-        textDecoration: 'none',
-        color: 'inherit',
-        background: '#fff',
-      }}
+      className="group block overflow-hidden rounded-lg border border-primary/10 bg-white text-ink no-underline shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0"
     >
       {cover?.url && cover.width && cover.height ? (
-        <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9' }}>
+        <div className="relative aspect-video w-full overflow-hidden bg-cream-dark">
           <Image
             src={cover.url}
             alt={cover.alt ?? post.title}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
-            style={{ objectFit: 'cover' }}
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
         </div>
       ) : null}
-      <div style={{ padding: '1rem' }}>
-        <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.25rem' }}>{post.title}</h3>
-        <p style={{ margin: '0 0 0.5rem 0', color: '#555', fontSize: '0.85rem' }}>
+      <div className="p-4">
+        <h3 className="mb-2 font-display text-xl font-semibold leading-tight text-ink">
+          {post.title}
+        </h3>
+        <p className="m-0 mb-2 text-sm text-muted">
           {dateFormatter.format(new Date(post.publishedDate))}
         </p>
         {post.excerpt ? (
-          <p style={{ margin: 0, color: '#333', fontSize: '0.95rem', lineHeight: 1.5 }}>
-            {post.excerpt}
-          </p>
+          <p className="m-0 text-[0.95rem] leading-relaxed text-ink/80">{post.excerpt}</p>
         ) : null}
       </div>
     </Link>

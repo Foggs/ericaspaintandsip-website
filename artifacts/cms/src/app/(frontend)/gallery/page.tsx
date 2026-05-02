@@ -41,13 +41,15 @@ export default async function GalleryPage() {
   }
 
   return (
-    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1rem' }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Gallery</h1>
-      <p style={{ color: '#555', marginTop: 0, marginBottom: '1.5rem' }}>
+    <main className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
+      <h1 className="mb-2 font-display text-4xl font-semibold text-ink sm:text-5xl">
+        Gallery
+      </h1>
+      <p className="mb-6 text-muted">
         A look at our events, paintings, and the studio behind them.
       </p>
       {photos.length === 0 ? (
-        <p style={{ color: '#666' }}>Photos coming soon — check back shortly.</p>
+        <p className="text-muted">Photos coming soon — check back shortly.</p>
       ) : (
         <GalleryGrid photos={photos} />
       )}

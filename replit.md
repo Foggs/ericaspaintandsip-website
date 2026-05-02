@@ -86,10 +86,33 @@ and Payload together. Registered as a workspace artifact at preview path
   PayPal capture route — `access.create: () => false` blocks public REST;
   `paypalOrderId` is `unique` + `index` for idempotency).
 - **Frontend routes**: `/cms`, `/cms/events`, `/cms/events/[slug]`,
-  `/cms/private-events`. Custom APIs: `POST /cms/api/private-inquiry`,
-  `POST /cms/api/paypal/create-order`, `POST /cms/api/paypal/capture-order`.
+  `/cms/blog`, `/cms/blog/[slug]`, `/cms/gallery`, `/cms/private-events`,
+  `/cms/contact`. Custom APIs: `POST /cms/api/private-inquiry`,
+  `POST /cms/api/newsletter`, `POST /cms/api/paypal/create-order`,
+  `POST /cms/api/paypal/capture-order`.
 - **Dependencies added beyond the Payload defaults**: `nodemailer` (+
-  `@types/nodemailer`), `@paypal/react-paypal-js`.
+  `@types/nodemailer`), `@paypal/react-paypal-js`. Styling/animation:
+  `tailwindcss` v4 + `@tailwindcss/postcss` + `@tailwindcss/typography`,
+  `framer-motion`, `clsx`, `tailwind-merge`.
+- **Styling system (Feature 13)**: Tailwind v4 with CSS-based theming —
+  no `tailwind.config.ts`. All brand tokens declared in
+  `src/app/(frontend)/globals.css` under `@theme { --color-primary,
+  --color-accent, --color-cream, --color-ink, --color-muted, ... }` and
+  consumed as utilities (`bg-primary`, `text-ink`, `font-display`,
+  `border-primary/20`). PostCSS pipeline configured in
+  `postcss.config.mjs`. Fonts loaded via `next/font/google` in
+  `(frontend)/layout.tsx`: Fraunces (serif display, `--font-fraunces` →
+  `font-display`) for H1–H4, Inter (sans body, `--font-inter` →
+  `font-sans`). Brand palette: deep purple `#6B21A8` (primary), coral
+  `#F97056` (accent), warm cream `#faf6f0` (background), `#1f1b2e`
+  (ink), `#5c5470` (muted text). `lib/utils.ts` exports `cn()`
+  (clsx + tailwind-merge). Reusable `components/motion/FadeIn.tsx`
+  wraps Framer Motion with `useReducedMotion` support; used in `Hero`
+  for staggered (0/0.1/0.2s) entrance. `GalleryLightbox` uses
+  `motion.div` + `motion.figure`, with `<AnimatePresence>` placed in
+  `GalleryGrid` (parent) so exit animations actually run when the
+  lightbox is unmounted. All hover lifts use Tailwind's
+  `motion-reduce:` variants.
 - **PayPal**: server-side helpers in `lib/paypal.ts` use the PayPal Orders
   API v2 directly via `fetch` (no server SDK — PayPal deprecated
   `@paypal/checkout-server-sdk`). Env vars: `PAYPAL_CLIENT_ID`,

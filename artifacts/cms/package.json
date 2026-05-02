@@ -16,13 +16,19 @@
     "@payloadcms/next": "3.84.1",
     "@payloadcms/richtext-lexical": "3.84.1",
     "@paypal/react-paypal-js": "^9.2.0",
+    "@tailwindcss/postcss": "catalog:",
+    "@tailwindcss/typography": "catalog:",
+    "clsx": "catalog:",
+    "framer-motion": "catalog:",
     "graphql": "^16.9.0",
     "next": "15.3.9",
     "nodemailer": "^8.0.7",
     "payload": "3.84.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "sharp": "^0.33.5"
+    "sharp": "^0.33.5",
+    "tailwind-merge": "catalog:",
+    "tailwindcss": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",

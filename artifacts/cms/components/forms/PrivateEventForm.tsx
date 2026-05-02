@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
+import { cn } from '@/lib/utils'
 
 type FieldErrors = Partial<{
   name: string
@@ -13,19 +14,13 @@ type FieldErrors = Partial<{
 
 type Status = 'idle' | 'submitting' | 'success'
 
-const labelStyle = { display: 'block', fontWeight: 600, marginBottom: '0.25rem' }
-const inputStyle = {
-  width: '100%',
-  padding: '0.5rem 0.75rem',
-  border: '1px solid #ccc',
-  borderRadius: '4px',
-  fontSize: '1rem',
-  boxSizing: 'border-box' as const,
-}
-const fieldStyle = { marginBottom: '1rem' }
-const errorStyle = { color: '#b00020', fontSize: '0.875rem', marginTop: '0.25rem' }
-
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const labelClass = 'mb-1 block font-semibold text-ink'
+const inputClass =
+  'w-full rounded-md border border-primary/20 bg-white px-3 py-2 text-base text-ink focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
+const fieldClass = 'mb-4'
+const errorClass = 'mt-1 text-sm text-danger'
 
 export function PrivateEventForm() {
   const [name, setName] = useState('')
@@ -100,16 +95,10 @@ export function PrivateEventForm() {
     return (
       <div
         role="status"
-        style={{
-          padding: '1.5rem',
-          border: '1px solid #cfe8d4',
-          background: '#f0faf2',
-          borderRadius: '8px',
-          color: '#1f5132',
-        }}
+        className="rounded-lg border border-success-border bg-success-bg p-6 text-success"
       >
-        <h2 style={{ marginTop: 0, marginBottom: '0.5rem' }}>Thank you!</h2>
-        <p style={{ margin: 0 }}>We&apos;ll be in touch within 24 hours.</p>
+        <h2 className="mb-2 font-display text-2xl font-semibold text-success">Thank you!</h2>
+        <p className="m-0">We&apos;ll be in touch within 24 hours.</p>
       </div>
     )
   }
@@ -120,15 +109,10 @@ export function PrivateEventForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      style={{
-        padding: '1.5rem',
-        border: '1px solid #e5e5e5',
-        borderRadius: '8px',
-        background: '#fafafa',
-      }}
+      className="rounded-lg border border-primary/15 bg-white p-6 shadow-sm"
     >
-      <div style={fieldStyle}>
-        <label htmlFor="pi-name" style={labelStyle}>
+      <div className={fieldClass}>
+        <label htmlFor="pi-name" className={labelClass}>
           First &amp; Last Name <span aria-hidden="true">*</span>
         </label>
         <input
@@ -136,19 +120,19 @@ export function PrivateEventForm() {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          style={inputStyle}
+          className={inputClass}
           aria-invalid={Boolean(errors.name)}
           aria-describedby={errors.name ? 'pi-name-err' : undefined}
         />
         {errors.name ? (
-          <p id="pi-name-err" style={errorStyle}>
+          <p id="pi-name-err" className={errorClass}>
             {errors.name}
           </p>
         ) : null}
       </div>
 
-      <div style={fieldStyle}>
-        <label htmlFor="pi-email" style={labelStyle}>
+      <div className={fieldClass}>
+        <label htmlFor="pi-email" className={labelClass}>
           Email Address <span aria-hidden="true">*</span>
         </label>
         <input
@@ -156,19 +140,19 @@ export function PrivateEventForm() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={inputStyle}
+          className={inputClass}
           aria-invalid={Boolean(errors.email)}
           aria-describedby={errors.email ? 'pi-email-err' : undefined}
         />
         {errors.email ? (
-          <p id="pi-email-err" style={errorStyle}>
+          <p id="pi-email-err" className={errorClass}>
             {errors.email}
           </p>
         ) : null}
       </div>
 
-      <div style={fieldStyle}>
-        <label htmlFor="pi-phone" style={labelStyle}>
+      <div className={fieldClass}>
+        <label htmlFor="pi-phone" className={labelClass}>
           Phone Number <span aria-hidden="true">*</span>
         </label>
         <input
@@ -176,19 +160,19 @@ export function PrivateEventForm() {
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          style={inputStyle}
+          className={inputClass}
           aria-invalid={Boolean(errors.phone)}
           aria-describedby={errors.phone ? 'pi-phone-err' : undefined}
         />
         {errors.phone ? (
-          <p id="pi-phone-err" style={errorStyle}>
+          <p id="pi-phone-err" className={errorClass}>
             {errors.phone}
           </p>
         ) : null}
       </div>
 
-      <div style={fieldStyle}>
-        <label htmlFor="pi-date" style={labelStyle}>
+      <div className={fieldClass}>
+        <label htmlFor="pi-date" className={labelClass}>
           Preferred Date
         </label>
         <input
@@ -196,13 +180,13 @@ export function PrivateEventForm() {
           type="date"
           value={preferredDate}
           onChange={(e) => setPreferredDate(e.target.value)}
-          style={{ ...inputStyle, maxWidth: '14rem' }}
+          className={cn(inputClass, 'max-w-56')}
         />
-        {errors.preferredDate ? <p style={errorStyle}>{errors.preferredDate}</p> : null}
+        {errors.preferredDate ? <p className={errorClass}>{errors.preferredDate}</p> : null}
       </div>
 
-      <div style={fieldStyle}>
-        <label htmlFor="pi-guests" style={labelStyle}>
+      <div className={fieldClass}>
+        <label htmlFor="pi-guests" className={labelClass}>
           Number of Guests
         </label>
         <input
@@ -212,18 +196,10 @@ export function PrivateEventForm() {
           value={guestCount}
           disabled={notSure}
           onChange={(e) => setGuestCount(e.target.value)}
-          style={{ ...inputStyle, maxWidth: '8rem' }}
+          className={cn(inputClass, 'max-w-32 disabled:opacity-60')}
           aria-invalid={Boolean(errors.guestCount)}
         />
-        <label
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            marginLeft: '1rem',
-            fontSize: '0.95rem',
-          }}
-        >
+        <label className="ml-4 inline-flex items-center gap-2 text-[0.95rem] text-ink">
           <input
             type="checkbox"
             checked={notSure}
@@ -231,14 +207,15 @@ export function PrivateEventForm() {
               setNotSure(e.target.checked)
               if (e.target.checked) setGuestCount('')
             }}
+            className="accent-primary"
           />
           Not sure yet
         </label>
-        {errors.guestCount ? <p style={errorStyle}>{errors.guestCount}</p> : null}
+        {errors.guestCount ? <p className={errorClass}>{errors.guestCount}</p> : null}
       </div>
 
-      <div style={fieldStyle}>
-        <label htmlFor="pi-message" style={labelStyle}>
+      <div className={fieldClass}>
+        <label htmlFor="pi-message" className={labelClass}>
           Event Details / Message <span aria-hidden="true">*</span>
         </label>
         <textarea
@@ -246,12 +223,12 @@ export function PrivateEventForm() {
           rows={5}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          style={{ ...inputStyle, resize: 'vertical' as const }}
+          className={cn(inputClass, 'resize-y')}
           aria-invalid={Boolean(errors.message)}
           aria-describedby={errors.message ? 'pi-message-err' : undefined}
         />
         {errors.message ? (
-          <p id="pi-message-err" style={errorStyle}>
+          <p id="pi-message-err" className={errorClass}>
             {errors.message}
           </p>
         ) : null}
@@ -260,22 +237,13 @@ export function PrivateEventForm() {
       <button
         type="submit"
         disabled={submitting}
-        style={{
-          padding: '0.75rem 1.5rem',
-          background: submitting ? '#666' : '#222',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '4px',
-          fontSize: '1rem',
-          fontWeight: 600,
-          cursor: submitting ? 'not-allowed' : 'pointer',
-        }}
+        className="rounded-md bg-primary px-6 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-primary/50 motion-reduce:transition-none"
       >
         {submitting ? 'Sending…' : 'Send inquiry'}
       </button>
 
       {submitError ? (
-        <p role="alert" style={{ ...errorStyle, marginTop: '1rem' }}>
+        <p role="alert" className={cn(errorClass, 'mt-4')}>
           {submitError}
         </p>
       ) : null}

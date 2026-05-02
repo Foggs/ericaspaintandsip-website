@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 
 export type LightboxPhoto = {
   id: number
@@ -21,12 +22,15 @@ type Props = {
 export function GalleryLightbox({ photos, index, onClose, onNavigate }: Props) {
   const photo = photos[index]
   const hasMultiple = photos.length > 1
+  const reduce = useReducedMotion()
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
-      else if (hasMultiple && e.key === 'ArrowLeft') onNavigate((index - 1 + photos.length) % photos.length)
-      else if (hasMultiple && e.key === 'ArrowRight') onNavigate((index + 1) % photos.length)
+      else if (hasMultiple && e.key === 'ArrowLeft')
+        onNavigate((index - 1 + photos.length) % photos.length)
+      else if (hasMultiple && e.key === 'ArrowRight')
+        onNavigate((index + 1) % photos.length)
     }
     window.addEventListener('keydown', handler)
     const prevOverflow = document.body.style.overflow
@@ -39,43 +43,28 @@ export function GalleryLightbox({ photos, index, onClose, onNavigate }: Props) {
 
   if (!photo) return null
 
+  const fadeDuration = reduce ? 0 : 0.2
+  const scaleInitial = reduce ? 1 : 0.96
+
   return (
-    <div
+    <motion.div
       role="dialog"
       aria-modal="true"
       aria-label={photo.caption ?? photo.alt}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(0,0,0,0.85)',
-        zIndex: 50,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '2rem',
-      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: fadeDuration }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/90 p-8"
     >
       <button
         type="button"
         onClick={onClose}
         aria-label="Close"
-        style={{
-          position: 'absolute',
-          top: '1rem',
-          right: '1rem',
-          background: 'rgba(255,255,255,0.15)',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '999px',
-          width: '2.5rem',
-          height: '2.5rem',
-          fontSize: '1.5rem',
-          lineHeight: 1,
-          cursor: 'pointer',
-        }}
+        className="absolute right-4 top-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-none bg-white/15 text-2xl leading-none text-white transition-colors hover:bg-white/25 motion-reduce:transition-none"
       >
         ×
       </button>
@@ -88,21 +77,7 @@ export function GalleryLightbox({ photos, index, onClose, onNavigate }: Props) {
             onNavigate((index - 1 + photos.length) % photos.length)
           }}
           aria-label="Previous photo"
-          style={{
-            position: 'absolute',
-            left: '1rem',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: 'rgba(255,255,255,0.15)',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '999px',
-            width: '2.5rem',
-            height: '2.5rem',
-            fontSize: '1.5rem',
-            lineHeight: 1,
-            cursor: 'pointer',
-          }}
+          className="absolute left-4 top-1/2 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-none bg-white/15 text-2xl leading-none text-white transition-colors hover:bg-white/25 motion-reduce:transition-none"
         >
           ‹
         </button>
@@ -116,36 +91,19 @@ export function GalleryLightbox({ photos, index, onClose, onNavigate }: Props) {
             onNavigate((index + 1) % photos.length)
           }}
           aria-label="Next photo"
-          style={{
-            position: 'absolute',
-            right: '1rem',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: 'rgba(255,255,255,0.15)',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '999px',
-            width: '2.5rem',
-            height: '2.5rem',
-            fontSize: '1.5rem',
-            lineHeight: 1,
-            cursor: 'pointer',
-          }}
+          className="absolute right-4 top-1/2 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-none bg-white/15 text-2xl leading-none text-white transition-colors hover:bg-white/25 motion-reduce:transition-none"
         >
           ›
         </button>
       ) : null}
 
-      <figure
-        style={{
-          margin: 0,
-          maxWidth: '90vw',
-          maxHeight: '90vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '0.75rem',
-        }}
+      <motion.figure
+        key={photo.id}
+        initial={{ opacity: 0, scale: scaleInitial }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: scaleInitial }}
+        transition={{ duration: fadeDuration }}
+        className="m-0 flex max-h-[90vh] max-w-[90vw] flex-col items-center gap-3"
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -153,28 +111,14 @@ export function GalleryLightbox({ photos, index, onClose, onNavigate }: Props) {
           alt={photo.alt}
           width={photo.width}
           height={photo.height}
-          style={{
-            maxWidth: '90vw',
-            maxHeight: photo.caption ? '78vh' : '85vh',
-            width: 'auto',
-            height: 'auto',
-            objectFit: 'contain',
-            borderRadius: '4px',
-          }}
+          className={`h-auto w-auto rounded object-contain max-w-[90vw] ${photo.caption ? 'max-h-[78vh]' : 'max-h-[85vh]'}`}
         />
         {photo.caption ? (
-          <figcaption
-            style={{
-              color: '#fff',
-              fontSize: '0.95rem',
-              textAlign: 'center',
-              maxWidth: '60ch',
-            }}
-          >
+          <figcaption className="max-w-[60ch] text-center text-[0.95rem] text-white">
             {photo.caption}
           </figcaption>
         ) : null}
-      </figure>
-    </div>
+      </motion.figure>
+    </motion.div>
   )
 }

@@ -9,53 +9,35 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem 1rem' }}>
-      <h1 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.25rem)', margin: '0 0 0.75rem 0' }}>
+    <main className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
+      <h1 className="mb-3 font-display text-4xl font-semibold text-ink sm:text-5xl">
         Contact
       </h1>
-      <p style={{ color: '#555', margin: '0 0 1.5rem 0', lineHeight: 1.6 }}>
+      <p className="mb-6 leading-relaxed text-muted">
         We&apos;d love to hear from you. Find us in Sterling Heights, MI — drop by, give us
         a call, or send a quick note.
       </p>
 
       <ContactInfo />
 
-      <section
-        style={{
-          marginTop: '2rem',
-          padding: '1.5rem',
-          border: '1px solid #cfe8d4',
-          background: '#f0faf2',
-          borderRadius: '8px',
-          color: '#1f5132',
-        }}
-      >
-        <h2 style={{ marginTop: 0, marginBottom: '0.5rem', fontSize: '1.25rem' }}>
+      <section className="mt-8 rounded-lg border border-accent/30 bg-accent-light p-6">
+        <h2 className="mb-2 font-display text-2xl font-semibold text-accent-dark">
           Planning a private event?
         </h2>
-        <p style={{ margin: '0 0 1rem 0', lineHeight: 1.6, color: '#1f5132' }}>
-          Use our private events form so we can capture all the details and get back to
-          you within 24 hours.
+        <p className="mb-4 leading-relaxed text-ink/80">
+          Use our private events form so we can capture all the details and get back to you
+          within 24 hours.
         </p>
         <Link
           href="/private-events"
-          style={{
-            display: 'inline-block',
-            padding: '0.65rem 1.25rem',
-            background: '#1f5132',
-            color: '#fff',
-            borderRadius: '4px',
-            fontWeight: 600,
-            textDecoration: 'none',
-          }}
+          className="inline-flex items-center justify-center rounded-md bg-accent px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-accent-dark motion-reduce:transition-none"
         >
           Plan a private event →
         </Link>
       </section>
 
-      <p style={{ marginTop: '1.5rem', color: '#666', lineHeight: 1.6 }}>
-        For all other questions, email or call us — we typically reply within one business
-        day.
+      <p className="mt-6 leading-relaxed text-muted">
+        For all other questions, email or call us — we typically reply within one business day.
       </p>
     </main>
   )

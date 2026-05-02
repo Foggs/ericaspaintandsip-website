@@ -1,18 +1,10 @@
 export function GalleryPreview() {
   return (
-    <section
-      style={{
-        maxWidth: '1100px',
-        margin: '0 auto',
-        padding: '3rem 1rem',
-      }}
-    >
-      <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', margin: '0 0 1rem 0' }}>
+    <section className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <h2 className="mb-4 font-display text-3xl font-semibold text-ink sm:text-4xl">
         From the studio
       </h2>
-      <p style={{ color: '#666', margin: 0 }}>
-        Photos from past events will appear here soon.
-      </p>
+      <p className="m-0 text-muted">Photos from past events will appear here soon.</p>
     </section>
   )
 }

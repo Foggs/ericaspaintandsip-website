@@ -16,36 +16,29 @@ export function PostContent({ post }: Props) {
   const cover = isMedia(post.coverImage) ? post.coverImage : null
 
   return (
-    <article style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem 1rem' }}>
+    <article className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
       {cover?.url && cover.width && cover.height ? (
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            aspectRatio: '16 / 9',
-            marginBottom: '1.5rem',
-            borderRadius: '8px',
-            overflow: 'hidden',
-          }}
-        >
+        <div className="relative mb-6 aspect-video w-full overflow-hidden rounded-lg shadow-sm">
           <Image
             src={cover.url}
             alt={cover.alt ?? post.title}
             fill
             sizes="(max-width: 800px) 100vw, 800px"
             priority
-            style={{ objectFit: 'cover' }}
+            className="object-cover"
           />
         </div>
       ) : null}
 
-      <h1 style={{ fontSize: '2.25rem', margin: '0 0 0.5rem 0' }}>{post.title}</h1>
-      <p style={{ margin: '0 0 1.5rem 0', color: '#666', fontSize: '0.95rem' }}>
+      <h1 className="mb-2 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
+        {post.title}
+      </h1>
+      <p className="mb-6 text-sm text-muted">
         {dateFormatter.format(new Date(post.publishedDate))}
       </p>
 
       {post.content ? (
-        <div style={{ lineHeight: 1.6, color: '#222' }}>
+        <div className="prose prose-lg max-w-none text-ink">
           <RichText data={post.content} />
         </div>
       ) : null}

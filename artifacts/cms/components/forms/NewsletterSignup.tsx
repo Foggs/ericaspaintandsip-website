@@ -1,25 +1,16 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
-
-const inputStyle = {
-  padding: '0.65rem 0.85rem',
-  border: '1px solid #ccc',
-  borderRadius: '4px',
-  fontSize: '1rem',
-  flex: '1 1 12rem',
-  minWidth: 0,
-  boxSizing: 'border-box' as const,
-}
+import { cn } from '@/lib/utils'
 
 type NoticeKind = 'info' | 'success' | 'error'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-const noticeColor: Record<NoticeKind, string> = {
-  info: '#555',
-  success: '#1f5132',
-  error: '#b00020',
+const noticeClass: Record<NoticeKind, string> = {
+  info: 'italic text-muted',
+  success: 'font-semibold text-success',
+  error: 'font-semibold text-danger',
 }
 
 export function NewsletterSignup() {
@@ -70,30 +61,18 @@ export function NewsletterSignup() {
     }
   }
 
+  const inputClass =
+    'min-w-0 flex-1 basis-48 rounded-md border border-primary/20 bg-white px-3 py-2.5 text-base text-ink placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-60'
+
   return (
-    <section
-      style={{
-        background: '#fafafa',
-        padding: '3rem 1rem',
-      }}
-    >
-      <div style={{ maxWidth: '640px', margin: '0 auto', textAlign: 'center' }}>
-        <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', margin: '0 0 0.5rem 0' }}>
+    <section className="bg-primary-light/40 px-4 py-12 sm:py-16">
+      <div className="mx-auto max-w-2xl text-center">
+        <h2 className="mb-2 font-display text-3xl font-semibold text-ink sm:text-4xl">
           Stay in the loop
         </h2>
-        <p style={{ color: '#555', margin: '0 0 1.5rem 0' }}>
-          Get monthly updates on new events and specials.
-        </p>
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '0.5rem',
-            justifyContent: 'center',
-          }}
-        >
-          <label htmlFor="news-name" style={{ position: 'absolute', left: '-10000px' }}>
+        <p className="mb-6 text-muted">Get monthly updates on new events and specials.</p>
+        <form onSubmit={handleSubmit} className="flex flex-wrap justify-center gap-2">
+          <label htmlFor="news-name" className="sr-only">
             Name
           </label>
           <input
@@ -103,10 +82,10 @@ export function NewsletterSignup() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             disabled={submitting}
-            style={inputStyle}
+            className={inputClass}
           />
 
-          <label htmlFor="news-email" style={{ position: 'absolute', left: '-10000px' }}>
+          <label htmlFor="news-email" className="sr-only">
             Email
           </label>
           <input
@@ -117,36 +96,19 @@ export function NewsletterSignup() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={submitting}
-            style={inputStyle}
+            className={inputClass}
           />
 
           <button
             type="submit"
             disabled={submitting}
-            style={{
-              padding: '0.65rem 1.25rem',
-              background: submitting ? '#666' : '#222',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '4px',
-              fontSize: '1rem',
-              fontWeight: 600,
-              cursor: submitting ? 'not-allowed' : 'pointer',
-            }}
+            className="rounded-md bg-accent px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:bg-accent/50 motion-reduce:transition-none"
           >
             {submitting ? 'Subscribing…' : 'Subscribe'}
           </button>
         </form>
         {notice ? (
-          <p
-            role="status"
-            style={{
-              marginTop: '1rem',
-              color: noticeColor[noticeKind],
-              fontStyle: noticeKind === 'info' ? 'italic' : 'normal',
-              fontWeight: noticeKind === 'info' ? 400 : 600,
-            }}
-          >
+          <p role="status" className={cn('mt-4', noticeClass[noticeKind])}>
             {notice}
           </p>
         ) : null}

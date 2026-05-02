@@ -25,39 +25,31 @@ export function EventCard({ event }: Props) {
   return (
     <Link
       href={`/events/${slug}`}
-      style={{
-        display: 'block',
-        border: '1px solid #e5e5e5',
-        borderRadius: '8px',
-        overflow: 'hidden',
-        textDecoration: 'none',
-        color: 'inherit',
-        background: '#fff',
-      }}
+      className="group block overflow-hidden rounded-lg border border-primary/10 bg-white text-ink no-underline shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0"
     >
       {cover?.url && cover.width && cover.height ? (
-        <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9' }}>
+        <div className="relative aspect-video w-full overflow-hidden bg-cream-dark">
           <Image
             src={cover.url}
             alt={cover.alt ?? event.title}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
-            style={{ objectFit: 'cover' }}
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
         </div>
       ) : null}
-      <div style={{ padding: '1rem' }}>
-        <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.25rem' }}>{event.title}</h3>
-        <p style={{ margin: '0 0 0.25rem 0', color: '#555', fontSize: '0.9rem' }}>
+      <div className="p-4">
+        <h3 className="mb-2 font-display text-xl font-semibold leading-tight text-ink">
+          {event.title}
+        </h3>
+        <p className="m-0 text-sm text-muted">
           {dateFormatter.format(new Date(event.date))}
         </p>
         {event.location ? (
-          <p style={{ margin: '0 0 0.25rem 0', color: '#555', fontSize: '0.9rem' }}>
-            {event.location}
-          </p>
+          <p className="mt-1 text-sm text-muted">{event.location}</p>
         ) : null}
         {typeof event.price === 'number' ? (
-          <p style={{ margin: '0.5rem 0 0 0', fontWeight: 600 }}>
+          <p className="mt-2 font-semibold text-primary">
             {priceFormatter.format(event.price)}
           </p>
         ) : null}

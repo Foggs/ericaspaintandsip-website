@@ -1,0 +1,48 @@
+Feature 12 confirmed. Phase 2 complete. Moving to Feature 13 — Design Polish and Animations.
+
+Reference files: CLAUDE.md (Styling Conventions, Design Direction sections),
+ericaspaintandsip_PRD.md (Section 6)
+
+## Feature: Design Polish and Animations
+
+### Description
+Full visual implementation pass across all pages. Apply the final color system,
+typography, spacing, and Framer Motion animations. The site should feel modern,
+dynamic, and energetic — reflecting the paint-and-sip brand.
+
+### Files Involved
+- artifacts/cms/tailwind.config.ts (define color tokens and typography scale)
+- artifacts/cms/src/app/(frontend)/layout.tsx (global font imports, base styles)
+- All page files under src/app/(frontend)/
+- All component files under components/
+
+### Design Tokens to Define in tailwind.config.ts
+- Primary: deep purple (e.g. #6B21A8 or brand-matched equivalent)
+- Accent: warm coral or gold for CTAs
+- Background: off-white / soft cream
+- Font families: display font (Playfair Display or Fraunces via Google Fonts) for headings,
+  clean sans-serif (Inter or DM Sans) for body
+
+### Animation Constraints
+- Use Framer Motion for: page transitions, card hover states, hero entrance animations
+- Do NOT add animation to form elements — keep forms fast and functional
+- Animations must respect prefers-reduced-motion
+- Keep animation durations under 400ms for interactive elements
+
+### General Constraints
+- Mobile-first — verify every page at 375px, 768px, and 1280px widths
+- Use cn() from lib/utils.ts for conditional class merging
+- No inline style props except for truly dynamic computed values
+- Do NOT change any data-fetching logic, API routes, or collection definitions
+
+### Acceptance Criteria
+- [ ] Color tokens are defined in tailwind.config.ts and used consistently
+- [ ] Display font renders on all headings across all pages
+- [ ] Hero section has an entrance animation
+- [ ] Event cards and gallery items have hover states
+- [ ] All pages are visually coherent and consistent
+- [ ] Animations respect prefers-reduced-motion
+- [ ] No layout breaks at 375px, 768px, or 1280px
+- [ ] No TypeScript errors
+
+PLAN ONLY. List every file you intend to modify. I will approve before you implement.

@@ -18,33 +18,27 @@ export async function FeaturedEvents() {
   })
 
   return (
-    <section style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1rem' }}>
-      <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', margin: '0 0 1.5rem 0' }}>
+    <section className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <h2 className="mb-6 font-display text-3xl font-semibold text-ink sm:text-4xl">
         Upcoming Events
       </h2>
 
       {docs.length === 0 ? (
-        <p style={{ color: '#666' }}>No upcoming events yet — check back soon.</p>
+        <p className="text-muted">No upcoming events yet — check back soon.</p>
       ) : (
         <>
-          <ul
-            style={{
-              listStyle: 'none',
-              padding: 0,
-              margin: 0,
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-              gap: '1.25rem',
-            }}
-          >
+          <ul className="grid list-none grid-cols-1 gap-5 p-0 sm:grid-cols-2 lg:grid-cols-3">
             {docs.map((event) => (
               <li key={event.id}>
                 <EventCard event={event} />
               </li>
             ))}
           </ul>
-          <p style={{ marginTop: '1.5rem' }}>
-            <Link href="/events" style={{ color: '#222', fontWeight: 600 }}>
+          <p className="mt-6">
+            <Link
+              href="/events"
+              className="font-semibold text-primary hover:text-primary-dark hover:underline underline-offset-2"
+            >
               View all events →
             </Link>
           </p>

@@ -6,6 +6,7 @@ import {
   PayPalButtons,
   type ReactPayPalScriptOptions,
 } from '@paypal/react-paypal-js'
+import { cn } from '@/lib/utils'
 
 type Props = {
   eventId: number
@@ -21,19 +22,13 @@ type FieldErrors = Partial<{
 
 type Phase = 'form' | 'paying' | 'success' | 'error'
 
-const labelStyle = { display: 'block', fontWeight: 600, marginBottom: '0.25rem' }
-const inputStyle = {
-  width: '100%',
-  padding: '0.5rem 0.75rem',
-  border: '1px solid #ccc',
-  borderRadius: '4px',
-  fontSize: '1rem',
-  boxSizing: 'border-box' as const,
-}
-const fieldStyle = { marginBottom: '1rem' }
-const errorStyle = { color: '#b00020', fontSize: '0.875rem', marginTop: '0.25rem' }
-
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const labelClass = 'mb-1 block font-semibold text-ink'
+const inputClass =
+  'w-full rounded-md border border-primary/20 bg-white px-3 py-2 text-base text-ink focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20'
+const fieldClass = 'mb-4'
+const errorClass = 'mt-1 text-sm text-danger'
 
 export function RegistrationForm({ eventId, eventTitle }: Props) {
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID
@@ -85,21 +80,16 @@ export function RegistrationForm({ eventId, eventTitle }: Props) {
     return (
       <div
         role="status"
-        style={{
-          marginTop: '2rem',
-          padding: '1.5rem',
-          border: '1px solid #cfe8d4',
-          background: '#f0faf2',
-          borderRadius: '8px',
-          color: '#1f5132',
-        }}
+        className="mt-8 rounded-lg border border-success-border bg-success-bg p-6 text-success"
       >
-        <h2 style={{ marginTop: 0, marginBottom: '0.5rem' }}>You&apos;re booked!</h2>
-        <p style={{ margin: 0 }}>
+        <h2 className="mb-2 font-display text-2xl font-semibold text-success">
+          You&apos;re booked!
+        </h2>
+        <p className="m-0">
           A confirmation email is on the way to <strong>{email}</strong>.
         </p>
         {bookingId !== null ? (
-          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem', color: '#1f5132' }}>
+          <p className="mt-2 text-sm text-success">
             Booking reference: #{String(bookingId)}
           </p>
         ) : null}
@@ -109,22 +99,13 @@ export function RegistrationForm({ eventId, eventTitle }: Props) {
 
   if (!clientId) {
     return (
-      <div
-        style={{
-          marginTop: '2rem',
-          padding: '1.5rem',
-          border: '1px solid #e5e5e5',
-          borderRadius: '8px',
-          background: '#fafafa',
-          color: '#555',
-        }}
-      >
-        <h2 style={{ marginTop: 0, marginBottom: '0.5rem', fontSize: '1.25rem' }}>
+      <div className="mt-8 rounded-lg border border-primary/15 bg-white p-6 text-muted shadow-sm">
+        <h2 className="mb-2 font-display text-xl font-semibold text-ink">
           Reserve your seats
         </h2>
-        <p style={{ margin: 0 }}>
-          Online registration is being set up. Check back soon, or call us to
-          reserve your spot for <strong>{eventTitle}</strong>.
+        <p className="m-0">
+          Online registration is being set up. Check back soon, or call us to reserve your
+          spot for <strong>{eventTitle}</strong>.
         </p>
       </div>
     )
@@ -133,23 +114,15 @@ export function RegistrationForm({ eventId, eventTitle }: Props) {
   const inPaying = phase === 'paying'
 
   return (
-    <div
-      style={{
-        marginTop: '2rem',
-        padding: '1.5rem',
-        border: '1px solid #e5e5e5',
-        borderRadius: '8px',
-        background: '#fafafa',
-      }}
-    >
-      <h2 style={{ marginTop: 0, marginBottom: '1rem', fontSize: '1.25rem' }}>
+    <div className="mt-8 rounded-lg border border-primary/15 bg-white p-6 shadow-sm">
+      <h2 className="mb-4 font-display text-xl font-semibold text-ink">
         Reserve your seats
       </h2>
 
       <form onSubmit={handleContinue} noValidate>
-        <fieldset disabled={inPaying} style={{ border: 0, padding: 0, margin: 0 }}>
-          <div style={fieldStyle}>
-            <label htmlFor="reg-name" style={labelStyle}>
+        <fieldset disabled={inPaying} className="m-0 border-0 p-0">
+          <div className={fieldClass}>
+            <label htmlFor="reg-name" className={labelClass}>
               Name
             </label>
             <input
@@ -157,14 +130,14 @@ export function RegistrationForm({ eventId, eventTitle }: Props) {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              style={inputStyle}
+              className={inputClass}
               aria-invalid={Boolean(errors.name)}
             />
-            {errors.name ? <p style={errorStyle}>{errors.name}</p> : null}
+            {errors.name ? <p className={errorClass}>{errors.name}</p> : null}
           </div>
 
-          <div style={fieldStyle}>
-            <label htmlFor="reg-email" style={labelStyle}>
+          <div className={fieldClass}>
+            <label htmlFor="reg-email" className={labelClass}>
               Email
             </label>
             <input
@@ -172,14 +145,14 @@ export function RegistrationForm({ eventId, eventTitle }: Props) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={inputStyle}
+              className={inputClass}
               aria-invalid={Boolean(errors.email)}
             />
-            {errors.email ? <p style={errorStyle}>{errors.email}</p> : null}
+            {errors.email ? <p className={errorClass}>{errors.email}</p> : null}
           </div>
 
-          <div style={fieldStyle}>
-            <label htmlFor="reg-phone" style={labelStyle}>
+          <div className={fieldClass}>
+            <label htmlFor="reg-phone" className={labelClass}>
               Phone
             </label>
             <input
@@ -187,14 +160,14 @@ export function RegistrationForm({ eventId, eventTitle }: Props) {
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              style={inputStyle}
+              className={inputClass}
               aria-invalid={Boolean(errors.phone)}
             />
-            {errors.phone ? <p style={errorStyle}>{errors.phone}</p> : null}
+            {errors.phone ? <p className={errorClass}>{errors.phone}</p> : null}
           </div>
 
-          <div style={fieldStyle}>
-            <label htmlFor="reg-seats" style={labelStyle}>
+          <div className={fieldClass}>
+            <label htmlFor="reg-seats" className={labelClass}>
               Seats
             </label>
             <input
@@ -204,25 +177,16 @@ export function RegistrationForm({ eventId, eventTitle }: Props) {
               max={20}
               value={seats}
               onChange={(e) => setSeats(Math.max(1, Number(e.target.value) || 1))}
-              style={{ ...inputStyle, maxWidth: '8rem' }}
+              className={cn(inputClass, 'max-w-32')}
               aria-invalid={Boolean(errors.seats)}
             />
-            {errors.seats ? <p style={errorStyle}>{errors.seats}</p> : null}
+            {errors.seats ? <p className={errorClass}>{errors.seats}</p> : null}
           </div>
 
           {!inPaying ? (
             <button
               type="submit"
-              style={{
-                padding: '0.75rem 1.5rem',
-                background: '#222',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
+              className="rounded-md bg-primary px-6 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-primary-dark motion-reduce:transition-none"
             >
               Continue to payment
             </button>
@@ -231,7 +195,7 @@ export function RegistrationForm({ eventId, eventTitle }: Props) {
       </form>
 
       {inPaying && paypalOptions ? (
-        <div style={{ marginTop: '1.5rem' }}>
+        <div className="mt-6">
           <PayPalScriptProvider options={paypalOptions}>
             <PayPalButtons
               style={{ layout: 'vertical', label: 'pay' }}
@@ -272,7 +236,9 @@ export function RegistrationForm({ eventId, eventTitle }: Props) {
                   error?: string
                 }
                 if (!res.ok || !body.ok) {
-                  setErrorMessage(body.error ?? 'Payment recorded but booking failed. Please contact us.')
+                  setErrorMessage(
+                    body.error ?? 'Payment recorded but booking failed. Please contact us.',
+                  )
                   setPhase('error')
                   return
                 }
@@ -294,15 +260,7 @@ export function RegistrationForm({ eventId, eventTitle }: Props) {
           <button
             type="button"
             onClick={backToForm}
-            style={{
-              marginTop: '0.5rem',
-              background: 'transparent',
-              border: 'none',
-              color: '#555',
-              cursor: 'pointer',
-              padding: '0.25rem 0',
-              fontSize: '0.875rem',
-            }}
+            className="mt-2 cursor-pointer border-none bg-transparent px-0 py-1 text-sm text-muted hover:text-ink"
           >
             ← Edit details
           </button>
@@ -312,27 +270,13 @@ export function RegistrationForm({ eventId, eventTitle }: Props) {
       {phase === 'error' && errorMessage ? (
         <div
           role="alert"
-          style={{
-            marginTop: '1rem',
-            padding: '0.75rem 1rem',
-            border: '1px solid #f5c2c7',
-            background: '#fdecee',
-            borderRadius: '4px',
-            color: '#842029',
-          }}
+          className="mt-4 rounded-md border border-danger-border bg-danger-bg p-4 text-danger"
         >
-          <p style={{ margin: '0 0 0.5rem 0' }}>{errorMessage}</p>
+          <p className="mb-2 m-0">{errorMessage}</p>
           <button
             type="button"
             onClick={backToForm}
-            style={{
-              padding: '0.5rem 1rem',
-              background: '#842029',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-            }}
+            className="rounded-md border-none bg-danger px-4 py-2 font-semibold text-white hover:bg-danger/90"
           >
             Try again
           </button>

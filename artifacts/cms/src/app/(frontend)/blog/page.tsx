@@ -20,21 +20,14 @@ export default async function BlogPage() {
   })
 
   return (
-    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1rem' }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>Blog</h1>
+    <main className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
+      <h1 className="mb-6 font-display text-4xl font-semibold text-ink sm:text-5xl">
+        Blog
+      </h1>
       {docs.length === 0 ? (
-        <p style={{ color: '#666' }}>No posts yet — check back soon.</p>
+        <p className="text-muted">No posts yet — check back soon.</p>
       ) : (
-        <ul
-          style={{
-            listStyle: 'none',
-            padding: 0,
-            margin: 0,
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: '1.25rem',
-          }}
-        >
+        <ul className="grid list-none grid-cols-1 gap-5 p-0 sm:grid-cols-2 lg:grid-cols-3">
           {docs.map((post) => (
             <li key={post.id}>
               <PostCard post={post} />

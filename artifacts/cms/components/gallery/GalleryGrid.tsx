@@ -2,6 +2,8 @@
 
 import Image from 'next/image'
 import { useMemo, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
+import { cn } from '@/lib/utils'
 import { GalleryLightbox, type LightboxPhoto } from './GalleryLightbox'
 
 export type GalleryCategory = 'Events' | 'Behind the Scenes' | 'Paintings' | 'Other'
@@ -48,12 +50,7 @@ export function GalleryGrid({ photos }: Props) {
       <div
         role="tablist"
         aria-label="Filter by category"
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '0.5rem',
-          marginBottom: '1.5rem',
-        }}
+        className="mb-6 flex flex-wrap gap-2"
       >
         {buttons.map((b) => {
           const active = filter === b.value
@@ -65,17 +62,13 @@ export function GalleryGrid({ photos }: Props) {
               aria-selected={active}
               disabled={b.disabled}
               onClick={() => setFilter(b.value)}
-              style={{
-                padding: '0.5rem 1rem',
-                borderRadius: '999px',
-                border: '1px solid',
-                borderColor: active ? '#111' : '#d4d4d4',
-                background: active ? '#111' : '#fff',
-                color: active ? '#fff' : b.disabled ? '#aaa' : '#111',
-                fontSize: '0.9rem',
-                cursor: b.disabled ? 'not-allowed' : 'pointer',
-                opacity: b.disabled ? 0.6 : 1,
-              }}
+              className={cn(
+                'rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 motion-reduce:transition-none',
+                active
+                  ? 'border-primary bg-primary text-white'
+                  : 'border-primary/20 bg-white text-ink hover:border-primary/40 hover:bg-primary/5',
+                b.disabled && 'cursor-not-allowed opacity-50 hover:border-primary/20 hover:bg-white',
+              )}
             >
               {b.label}
             </button>
@@ -84,43 +77,23 @@ export function GalleryGrid({ photos }: Props) {
       </div>
 
       {visible.length === 0 ? (
-        <p style={{ color: '#666' }}>No photos in this category yet.</p>
+        <p className="text-muted">No photos in this category yet.</p>
       ) : (
-        <ul
-          style={{
-            listStyle: 'none',
-            padding: 0,
-            margin: 0,
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-            gap: '0.75rem',
-          }}
-        >
+        <ul className="grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3 lg:grid-cols-4">
           {visible.map((photo, i) => (
             <li key={photo.id}>
               <button
                 type="button"
                 onClick={() => setSelectedIndex(i)}
                 aria-label={photo.caption ?? photo.alt}
-                style={{
-                  display: 'block',
-                  width: '100%',
-                  position: 'relative',
-                  aspectRatio: '1 / 1',
-                  border: '1px solid #e5e5e5',
-                  borderRadius: '6px',
-                  overflow: 'hidden',
-                  padding: 0,
-                  background: '#f5f5f5',
-                  cursor: 'pointer',
-                }}
+                className="group relative block aspect-square w-full cursor-pointer overflow-hidden rounded-md border border-primary/10 bg-cream-dark p-0 transition-all duration-200 hover:border-primary/30 hover:shadow-md motion-reduce:transition-none"
               >
                 <Image
                   src={photo.url}
                   alt={photo.alt}
                   fill
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  style={{ objectFit: 'cover' }}
+                  className="object-cover transition-transform duration-300 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
               </button>
             </li>
@@ -128,14 +101,17 @@ export function GalleryGrid({ photos }: Props) {
         </ul>
       )}
 
-      {selectedIndex !== null ? (
-        <GalleryLightbox
-          photos={visible}
-          index={Math.min(selectedIndex, visible.length - 1)}
-          onClose={() => setSelectedIndex(null)}
-          onNavigate={setSelectedIndex}
-        />
-      ) : null}
+      <AnimatePresence>
+        {selectedIndex !== null ? (
+          <GalleryLightbox
+            key="gallery-lightbox"
+            photos={visible}
+            index={Math.min(selectedIndex, visible.length - 1)}
+            onClose={() => setSelectedIndex(null)}
+            onNavigate={setSelectedIndex}
+          />
+        ) : null}
+      </AnimatePresence>
     </>
   )
 }
