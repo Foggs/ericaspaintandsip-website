@@ -8,6 +8,7 @@ import { Media } from './collections/Media.js'
 import { PrivateInquiries } from './collections/PrivateInquiries.js'
 import { Bookings } from './collections/Bookings.js'
 import { GalleryPhotos } from './collections/GalleryPhotos.js'
+import { Posts } from './collections/Posts.js'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -34,6 +35,7 @@ export default buildConfig({
     PrivateInquiries,
     Bookings,
     GalleryPhotos,
+    Posts,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
