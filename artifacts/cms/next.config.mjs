@@ -7,6 +7,13 @@ const nextConfig = {
   experimental: {
     reactCompiler: false,
   },
+  webpack: (config) => {
+    config.resolve.extensionAlias = {
+      '.js': ['.ts', '.tsx', '.js', '.jsx'],
+      '.mjs': ['.mts', '.mjs'],
+    }
+    return config
+  },
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })

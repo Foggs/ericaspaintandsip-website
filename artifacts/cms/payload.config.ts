@@ -3,6 +3,8 @@ import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { Events } from './collections/Events.js'
+import { Media } from './collections/Media.js'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -24,6 +26,8 @@ export default buildConfig({
       fields: [],
       timestamps: true,
     },
+    Events,
+    Media,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
