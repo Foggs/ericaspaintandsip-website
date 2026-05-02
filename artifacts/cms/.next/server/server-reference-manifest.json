@@ -1,5 +1,28 @@
 {
-  "node": {},
+  "node": {
+    "40d7698e22b0f6167e1455d59258c2981024a7553f": {
+      "workers": {
+        "app/(payload)/admin/[[...segments]]/page": {
+          "moduleId": "(rsc)/../../node_modules/.pnpm/next@15.3.9_react-dom@19.1.0_react@19.1.0__react@19.1.0_sass@1.77.4/node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Frunner%2Fworkspace%2Fartifacts%2Fcms%2Fsrc%2Fapp%2F(payload)%2Flayout.tsx%22%2C%5B%7B%22id%22%3A%2240d7698e22b0f6167e1455d59258c2981024a7553f%22%2C%22exportedName%22%3A%22%24%24RSC_SERVER_ACTION_0%22%7D%5D%5D%2C%5B%22%2Fhome%2Frunner%2Fworkspace%2Fnode_modules%2F.pnpm%2F%40payloadcms%2Bnext%403.84.1_%40types%2Breact%4019.2.14_graphql%4016.13.2_monaco-editor%400.55.1_next%40_e5bacd9bfea2c5529462a93bee0ad4b1%2Fnode_modules%2F%40payloadcms%2Fnext%2Fdist%2Flayouts%2FRoot%2Findex.js%22%2C%5B%7B%22id%22%3A%226029d46c4bbc70cd5e4497d5d3e77a62c0b8d01bc3%22%2C%22exportedName%22%3A%22%24%24RSC_SERVER_ACTION_0%22%7D%5D%5D%5D&__client_imported__=!",
+          "async": true
+        }
+      },
+      "layer": {
+        "app/(payload)/admin/[[...segments]]/page": "rsc"
+      }
+    },
+    "6029d46c4bbc70cd5e4497d5d3e77a62c0b8d01bc3": {
+      "workers": {
+        "app/(payload)/admin/[[...segments]]/page": {
+          "moduleId": "(rsc)/../../node_modules/.pnpm/next@15.3.9_react-dom@19.1.0_react@19.1.0__react@19.1.0_sass@1.77.4/node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fhome%2Frunner%2Fworkspace%2Fartifacts%2Fcms%2Fsrc%2Fapp%2F(payload)%2Flayout.tsx%22%2C%5B%7B%22id%22%3A%2240d7698e22b0f6167e1455d59258c2981024a7553f%22%2C%22exportedName%22%3A%22%24%24RSC_SERVER_ACTION_0%22%7D%5D%5D%2C%5B%22%2Fhome%2Frunner%2Fworkspace%2Fnode_modules%2F.pnpm%2F%40payloadcms%2Bnext%403.84.1_%40types%2Breact%4019.2.14_graphql%4016.13.2_monaco-editor%400.55.1_next%40_e5bacd9bfea2c5529462a93bee0ad4b1%2Fnode_modules%2F%40payloadcms%2Fnext%2Fdist%2Flayouts%2FRoot%2Findex.js%22%2C%5B%7B%22id%22%3A%226029d46c4bbc70cd5e4497d5d3e77a62c0b8d01bc3%22%2C%22exportedName%22%3A%22%24%24RSC_SERVER_ACTION_0%22%7D%5D%5D%5D&__client_imported__=!",
+          "async": true
+        }
+      },
+      "layer": {
+        "app/(payload)/admin/[[...segments]]/page": "rsc"
+      }
+    }
+  },
   "edge": {},
-  "encryptionKey": "wyXpQ0OxmcDpKbcR+drsqyDmsnDQJFexc/ICpc5UVEM="
+  "encryptionKey": "KawjlMQSp2cUsUKDFcfIrYnSQwJI/dulE/biQQ59HTU="
 }
