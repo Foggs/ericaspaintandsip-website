@@ -20,6 +20,10 @@ path = "scripts/post-merge.sh"
 timeoutMs = 20000
 
 [[ports]]
+localPort = 3001
+externalPort = 3001
+
+[[ports]]
 localPort = 8080
 externalPort = 80
 
@@ -29,3 +33,8 @@ externalPort = 3000
 
 [nix]
 channel = "stable-25_05"
+
+[userenv]
+
+[userenv.shared]
+PAYLOAD_SECRET = "fc890e65ed5bdac7b43b0cb274c6355745039d1c17ad81ad64af20f4f5b6abb3095836b5ac4a2503ee26e5a8bb306aeb"

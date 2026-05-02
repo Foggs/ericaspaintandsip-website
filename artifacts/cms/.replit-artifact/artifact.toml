@@ -1,0 +1,32 @@
+kind = "web"
+previewPath = "/cms"
+title = "Erica's Paint & Sip CMS"
+version = "1.0.0"
+id = "artifacts/cms"
+router = "path"
+
+[[services]]
+name = "web"
+paths = ["/cms"]
+localPort = 3001
+
+[services.development]
+run = "pnpm --filter @workspace/cms run dev"
+
+[services.production]
+
+[services.production.build]
+args = ["pnpm", "--filter", "@workspace/cms", "run", "build"]
+
+[services.production.build.env]
+NODE_ENV = "production"
+
+[services.production.run]
+args = ["pnpm", "--filter", "@workspace/cms", "run", "start"]
+
+[services.production.run.env]
+NODE_ENV = "production"
+PORT = "3001"
+
+[services.env]
+PORT = "3001"
