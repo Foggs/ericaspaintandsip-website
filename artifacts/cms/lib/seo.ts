@@ -6,7 +6,7 @@ export const BASE_PATH = '/cms'
 
 export const SITE_NAME = "Erica's Paint & Sip"
 
-export const DEFAULT_OG_IMAGE = '/opengraph.jpg'
+export const DEFAULT_OG_IMAGE_PATH = '/opengraph.jpg'
 
 function normalize(url: string): string {
   return url.replace(/\/+$/, '')
@@ -50,7 +50,8 @@ export function pageMetadata({
   absoluteTitle = false,
 }: PageMetaInput): Metadata {
   const url = absoluteUrl(path)
-  const images = [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: SITE_NAME }]
+  const ogImageUrl = absoluteUrl(DEFAULT_OG_IMAGE_PATH)
+  const images = [{ url: ogImageUrl, width: 1200, height: 630, alt: SITE_NAME }]
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,
@@ -69,7 +70,7 @@ export function pageMetadata({
       card: 'summary_large_image',
       title,
       description,
-      images: [DEFAULT_OG_IMAGE],
+      images: [ogImageUrl],
     },
   }
 }

@@ -3,12 +3,14 @@ import type { Metadata } from 'next'
 import { Fraunces, Inter } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import {
-  DEFAULT_OG_IMAGE,
+  DEFAULT_OG_IMAGE_PATH,
   SITE_NAME,
   SITE_ORIGIN,
   absoluteUrl,
 } from '@/lib/seo'
 import './globals.css'
+
+const DEFAULT_OG_IMAGE_URL = absoluteUrl(DEFAULT_OG_IMAGE_PATH)
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -45,13 +47,13 @@ export const metadata: Metadata = {
     url: absoluteUrl('/'),
     title: SITE_NAME,
     description: defaultDescription,
-    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: SITE_NAME }],
+    images: [{ url: DEFAULT_OG_IMAGE_URL, width: 1200, height: 630, alt: SITE_NAME }],
   },
   twitter: {
     card: 'summary_large_image',
     title: SITE_NAME,
     description: defaultDescription,
-    images: [DEFAULT_OG_IMAGE],
+    images: [DEFAULT_OG_IMAGE_URL],
   },
 }
 
