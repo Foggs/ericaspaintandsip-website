@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { EventDetail } from '@/components/events/EventDetail'
 import { getPayloadClient } from '@/lib/payload'
+import { buildEventJsonLd, jsonLdScriptProps } from '@/lib/jsonLd'
 import { pageMetadata } from '@/lib/seo'
 import type { Event } from '@payload-types'
 
@@ -48,5 +49,10 @@ export default async function EventDetailPage({ params }: Params) {
   const { slug } = await params
   const event = await findEvent(slug)
   if (!event) notFound()
-  return <EventDetail event={event} />
+  return (
+    <>
+      <script {...jsonLdScriptProps(buildEventJsonLd(event))} />
+      <EventDetail event={event} />
+    </>
+  )
 }

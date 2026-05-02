@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { PostContent } from '@/components/blog/PostContent'
 import { getPayloadClient } from '@/lib/payload'
+import { buildPostJsonLd, jsonLdScriptProps } from '@/lib/jsonLd'
 import { pageMetadata } from '@/lib/seo'
 import type { Post } from '@payload-types'
 
@@ -48,5 +49,10 @@ export default async function PostDetailPage({ params }: Params) {
   const { slug } = await params
   const post = await findPost(slug)
   if (!post) notFound()
-  return <PostContent post={post} />
+  return (
+    <>
+      <script {...jsonLdScriptProps(buildPostJsonLd(post))} />
+      <PostContent post={post} />
+    </>
+  )
 }
