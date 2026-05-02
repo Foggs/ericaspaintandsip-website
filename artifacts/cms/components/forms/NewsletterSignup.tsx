@@ -12,14 +12,62 @@ const inputStyle = {
   boxSizing: 'border-box' as const,
 }
 
+type NoticeKind = 'info' | 'success' | 'error'
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const noticeColor: Record<NoticeKind, string> = {
+  info: '#555',
+  success: '#1f5132',
+  error: '#b00020',
+}
+
 export function NewsletterSignup() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [notice, setNotice] = useState<string | null>(null)
+  const [noticeKind, setNoticeKind] = useState<NoticeKind>('info')
+  const [submitting, setSubmitting] = useState(false)
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setNotice('Newsletter signup is coming soon.')
+    const trimmedName = name.trim()
+    const trimmedEmail = email.trim()
+
+    if (!trimmedName || !EMAIL_RE.test(trimmedEmail)) {
+      setNoticeKind('error')
+      setNotice('Please enter your name and a valid email.')
+      return
+    }
+
+    setSubmitting(true)
+    setNotice(null)
+    try {
+      const res = await fetch('/cms/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: trimmedName, email: trimmedEmail }),
+      })
+      const body = (await res.json().catch(() => ({}))) as {
+        ok?: boolean
+        message?: string
+        error?: string
+      }
+      if (res.ok) {
+        setNoticeKind('success')
+        setNotice(body.message ?? 'Thanks for subscribing!')
+        setName('')
+        setEmail('')
+      } else {
+        setNoticeKind('error')
+        setNotice(body.error ?? 'Something went wrong. Please try again.')
+      }
+    } catch {
+      setNoticeKind('error')
+      setNotice('Network error. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -54,6 +102,7 @@ export function NewsletterSignup() {
             placeholder="First name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            disabled={submitting}
             style={inputStyle}
           />
 
@@ -67,29 +116,36 @@ export function NewsletterSignup() {
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={submitting}
             style={inputStyle}
           />
 
           <button
             type="submit"
+            disabled={submitting}
             style={{
               padding: '0.65rem 1.25rem',
-              background: '#222',
+              background: submitting ? '#666' : '#222',
               color: '#fff',
               border: 'none',
               borderRadius: '4px',
               fontSize: '1rem',
               fontWeight: 600,
-              cursor: 'pointer',
+              cursor: submitting ? 'not-allowed' : 'pointer',
             }}
           >
-            Subscribe
+            {submitting ? 'Subscribing…' : 'Subscribe'}
           </button>
         </form>
         {notice ? (
           <p
             role="status"
-            style={{ marginTop: '1rem', color: '#555', fontStyle: 'italic' }}
+            style={{
+              marginTop: '1rem',
+              color: noticeColor[noticeKind],
+              fontStyle: noticeKind === 'info' ? 'italic' : 'normal',
+              fontWeight: noticeKind === 'info' ? 400 : 600,
+            }}
           >
             {notice}
           </p>
