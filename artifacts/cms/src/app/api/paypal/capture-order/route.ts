@@ -207,25 +207,32 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to record booking.' }, { status: 500 })
   }
 
-  const eventDate = dateFormatter.format(new Date(event.date))
+  const parsedDate = new Date(event.date)
+  const eventDate = Number.isNaN(parsedDate.getTime())
+    ? (typeof event.date === 'string' ? event.date : '')
+    : dateFormatter.format(parsedDate)
   const adminEmail = process.env.ADMIN_EMAIL
-  const tasks: Array<Promise<void>> = [
-    sendEmail({
-      to: email,
-      subject: `Your booking for ${event.title}`,
-      html: bookingConfirmationCustomerHtml({
-        name,
-        eventTitle: event.title,
-        eventDate,
-        eventLocation: event.location ?? undefined,
-        seats,
-        amountPaid: captured.toFixed(2),
+  const tasks: Array<{ label: string; promise: Promise<void> }> = [
+    {
+      label: `customer<${email}>`,
+      promise: sendEmail({
+        to: email,
+        subject: `Your booking for ${event.title}`,
+        html: bookingConfirmationCustomerHtml({
+          name,
+          eventTitle: event.title,
+          eventDate,
+          eventLocation: event.location ?? undefined,
+          seats,
+          amountPaid: captured.toFixed(2),
+        }),
       }),
-    }),
+    },
   ]
   if (adminEmail) {
-    tasks.push(
-      sendEmail({
+    tasks.push({
+      label: `admin<${adminEmail}>`,
+      promise: sendEmail({
         to: adminEmail,
         subject: `New booking: ${event.title} (${name})`,
         html: bookingConfirmationAdminHtml({
@@ -240,13 +247,25 @@ export async function POST(request: Request) {
           paypalOrderId: orderID,
         }),
       }),
-    )
+    })
   } else {
     console.warn('[capture-order] ADMIN_EMAIL not set — admin notification skipped.')
   }
-  const settled = await Promise.allSettled(tasks)
-  for (const r of settled) {
-    if (r.status === 'rejected') console.error('[capture-order] email failed:', r.reason)
+  try {
+    const settled = await Promise.allSettled(tasks.map((t) => t.promise))
+    settled.forEach((r, i) => {
+      if (r.status === 'rejected') {
+        console.error(
+          `[capture-order] email failed for ${tasks[i].label} (bookingId=${booking.id}, paypalOrderId=${orderID}):`,
+          r.reason,
+        )
+      }
+    })
+  } catch (err) {
+    console.error(
+      `[capture-order] unexpected error dispatching emails (bookingId=${booking.id}, paypalOrderId=${orderID}):`,
+      err,
+    )
   }
 
   return NextResponse.json({ ok: true, bookingId: booking.id }, { status: 201 })

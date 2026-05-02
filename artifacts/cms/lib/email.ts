@@ -33,7 +33,22 @@ export async function sendEmail(input: SendEmailInput): Promise<void> {
     console.warn('[email] HTML body:\n' + input.html)
     return
   }
-  await transporter.sendMail({ from, ...input })
+  try {
+    await transporter.sendMail({ from, ...input })
+  } catch (err) {
+    console.error('[email] sendMail failed:', {
+      from,
+      to: input.to,
+      subject: input.subject,
+      error: err instanceof Error ? { message: err.message, stack: err.stack } : err,
+    })
+    throw err
+  }
+}
+
+function formatAmount(value: string): string {
+  const n = Number(value)
+  return Number.isFinite(n) ? n.toFixed(2) : value
 }
 
 export function escapeHtml(value: string): string {
@@ -54,16 +69,22 @@ export type BookingEmailInput = {
   amountPaid: string
 }
 
+function row(label: string, value: string): string {
+  if (!value || !value.trim()) return ''
+  return `<tr><td style="padding:6px 12px;font-weight:600;vertical-align:top;">${escapeHtml(label)}</td><td style="padding:6px 12px;">${escapeHtml(value)}</td></tr>`
+}
+
 export function bookingConfirmationCustomerHtml(input: BookingEmailInput): string {
+  const rows = [
+    row('When', input.eventDate),
+    row('Where', input.eventLocation ?? ''),
+    row('Seats', String(input.seats)),
+    row('Total paid', `$${formatAmount(input.amountPaid)}`),
+  ].join('')
   return `
     <h2>You're booked!</h2>
     <p>Hi ${escapeHtml(input.name)}, thanks for registering for <strong>${escapeHtml(input.eventTitle)}</strong>.</p>
-    <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px;">
-      <tr><td style="padding:6px 12px;font-weight:600;">When</td><td style="padding:6px 12px;">${escapeHtml(input.eventDate)}</td></tr>
-      ${input.eventLocation ? `<tr><td style="padding:6px 12px;font-weight:600;">Where</td><td style="padding:6px 12px;">${escapeHtml(input.eventLocation)}</td></tr>` : ''}
-      <tr><td style="padding:6px 12px;font-weight:600;">Seats</td><td style="padding:6px 12px;">${input.seats}</td></tr>
-      <tr><td style="padding:6px 12px;font-weight:600;">Total paid</td><td style="padding:6px 12px;">$${escapeHtml(input.amountPaid)}</td></tr>
-    </table>
+    <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px;">${rows}</table>
     <p style="margin-top:1rem;">See you soon!</p>
     <p style="color:#555;font-size:13px;">— Erica's Paint &amp; Sip</p>
   `
@@ -76,22 +97,17 @@ export type BookingAdminEmailInput = BookingEmailInput & {
 }
 
 export function bookingConfirmationAdminHtml(input: BookingAdminEmailInput): string {
-  const rows: Array<[string, string]> = [
-    ['Event', input.eventTitle],
-    ['Date', input.eventDate],
-    ['Name', input.name],
-    ['Email', input.email],
-    ['Phone', input.phone],
-    ['Seats', String(input.seats)],
-    ['Amount paid', `$${input.amountPaid}`],
-    ['PayPal order ID', input.paypalOrderId],
-  ]
-  const body = rows
-    .map(
-      ([label, value]) =>
-        `<tr><td style="padding:6px 12px;font-weight:600;vertical-align:top;">${escapeHtml(label)}</td><td style="padding:6px 12px;">${escapeHtml(value)}</td></tr>`,
-    )
-    .join('')
+  const body = [
+    row('Event', input.eventTitle),
+    row('Date', input.eventDate),
+    row('Location', input.eventLocation ?? ''),
+    row('Name', input.name),
+    row('Email', input.email),
+    row('Phone', input.phone),
+    row('Seats', String(input.seats)),
+    row('Amount paid', `$${formatAmount(input.amountPaid)}`),
+    row('PayPal order ID', input.paypalOrderId),
+  ].join('')
   return `
     <h2>New booking</h2>
     <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px;">${body}</table>
