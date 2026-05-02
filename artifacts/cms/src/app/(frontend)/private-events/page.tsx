@@ -1,19 +1,13 @@
 import type { Metadata } from 'next'
 import { PrivateEventForm } from '@/components/forms/PrivateEventForm'
-import { absoluteUrl } from '@/lib/seo'
+import { pageMetadata } from '@/lib/seo'
 
-const title = 'Private Events'
-const description =
-  'Host your private paint-and-sip event — birthdays, bridal showers, team events, and more.'
-const url = absoluteUrl('/private-events')
-
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: url },
-  openGraph: { title, description, url, type: 'website' },
-  twitter: { title, description },
-}
+export const metadata: Metadata = pageMetadata({
+  title: 'Private Events',
+  description:
+    'Host your private paint-and-sip event — birthdays, bridal showers, team events, and more.',
+  path: '/private-events',
+})
 
 export default function PrivateEventsPage() {
   return (

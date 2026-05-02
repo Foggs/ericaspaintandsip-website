@@ -2,7 +2,12 @@ import React from 'react'
 import type { Metadata } from 'next'
 import { Fraunces, Inter } from 'next/font/google'
 import { cn } from '@/lib/utils'
-import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, absoluteUrl } from '@/lib/seo'
+import {
+  DEFAULT_OG_IMAGE,
+  SITE_NAME,
+  SITE_ORIGIN,
+  absoluteUrl,
+} from '@/lib/seo'
 import './globals.css'
 
 const fraunces = Fraunces({
@@ -23,7 +28,7 @@ const defaultDescription =
   'Paint nights, private parties, and team events in Sterling Heights, MI.'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
+  metadataBase: new URL(SITE_ORIGIN),
   title: {
     default: SITE_NAME,
     template: `%s — ${SITE_NAME}`,

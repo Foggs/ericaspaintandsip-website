@@ -1,19 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ContactInfo } from '@/components/layout/ContactInfo'
-import { absoluteUrl } from '@/lib/seo'
+import { pageMetadata } from '@/lib/seo'
 
-const title = 'Contact'
-const description = "Get in touch with Erica's Paint & Sip in Sterling Heights, MI."
-const url = absoluteUrl('/contact')
-
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: url },
-  openGraph: { title, description, url, type: 'website' },
-  twitter: { title, description },
-}
+export const metadata: Metadata = pageMetadata({
+  title: 'Contact',
+  description: "Get in touch with Erica's Paint & Sip in Sterling Heights, MI.",
+  path: '/contact',
+})
 
 export default function ContactPage() {
   return (

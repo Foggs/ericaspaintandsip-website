@@ -3,22 +3,16 @@ import type { GalleryPhoto, Media } from '@payload-types'
 import { GalleryGrid, type GalleryCategory } from '@/components/gallery/GalleryGrid'
 import type { LightboxPhoto } from '@/components/gallery/GalleryLightbox'
 import { getPayloadClient } from '@/lib/payload'
-import { absoluteUrl } from '@/lib/seo'
+import { pageMetadata } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
-const title = 'Gallery'
-const description =
-  'Photos from our paint-and-sip events, finished paintings, and behind-the-scenes moments.'
-const url = absoluteUrl('/gallery')
-
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: url },
-  openGraph: { title, description, url, type: 'website' },
-  twitter: { title, description },
-}
+export const metadata: Metadata = pageMetadata({
+  title: 'Gallery',
+  description:
+    'Photos from our paint-and-sip events, finished paintings, and behind-the-scenes moments.',
+  path: '/gallery',
+})
 
 function isMedia(value: GalleryPhoto['image']): value is Media {
   return typeof value === 'object' && value !== null

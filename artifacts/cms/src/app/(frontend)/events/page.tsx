@@ -1,22 +1,16 @@
 import type { Metadata } from 'next'
 import { EventCard } from '@/components/events/EventCard'
 import { getPayloadClient } from '@/lib/payload'
-import { absoluteUrl } from '@/lib/seo'
+import { pageMetadata } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
-const title = 'Upcoming Events'
-const description =
-  'Browse upcoming paint-and-sip events at our Sterling Heights studio and reserve your seat.'
-const url = absoluteUrl('/events')
-
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: url },
-  openGraph: { title, description, url, type: 'website' },
-  twitter: { title, description },
-}
+export const metadata: Metadata = pageMetadata({
+  title: 'Upcoming Events',
+  description:
+    'Browse upcoming paint-and-sip events at our Sterling Heights studio and reserve your seat.',
+  path: '/events',
+})
 
 export default async function EventsPage() {
   const payload = await getPayloadClient()
