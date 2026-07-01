@@ -49,7 +49,7 @@ export default function Gallery() {
         </div>
       </div>
 
-      <div className="container px-4 md:px-6 py-16">
+      <div className="container px-4 md:px-6 py-16 mx-auto">
         {isLoading ? (
           <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6">
             {Array.from({ length: 8 }).map((_, i) => (
