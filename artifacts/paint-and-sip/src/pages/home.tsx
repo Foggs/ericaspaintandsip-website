@@ -63,7 +63,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/70 to-transparent"></div>
         </div>
         
-        <div className="container relative z-10 px-4 md:px-6">
+        <div className="container mx-auto relative z-10 px-4 md:px-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -93,12 +93,10 @@ export default function Home() {
 
       {/* Upcoming Events */}
       <section className="py-24 bg-card">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-            <div className="space-y-2">
-              <h2 className="text-3xl md:text-4xl font-serif font-bold text-card-foreground">Upcoming Classes</h2>
-              <p className="text-muted-foreground text-lg">Find your next masterpiece.</p>
-            </div>
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-12 space-y-4">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-card-foreground">Upcoming Classes</h2>
+            <p className="text-muted-foreground text-lg">Find your next masterpiece.</p>
             <Button asChild variant="link" className="text-primary hover:text-primary/80">
               <Link href="/events" className="flex items-center gap-2">
                 See all classes <ArrowRight className="w-4 h-4" />
@@ -163,7 +161,7 @@ export default function Home() {
 
       {/* Gallery Preview */}
       <section className="py-24 bg-primary/5">
-        <div className="container px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-12 space-y-4">
             <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">Studio Moments</h2>
             <p className="text-muted-foreground text-lg">A glimpse into our colorful world of creativity and connection.</p>
