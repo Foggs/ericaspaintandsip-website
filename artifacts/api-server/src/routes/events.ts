@@ -9,6 +9,7 @@ import {
   GetEventBySlugParams,
   GetUpcomingEventsQueryParams,
 } from "@workspace/api-zod";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router = Router();
 
@@ -51,7 +52,8 @@ router.get("/events/upcoming", async (req, res) => {
 });
 
 // GET /events/summary
-router.get("/events/summary", async (_req, res) => {
+// GET /events/summary — admin only (exposes business revenue/booking totals)
+router.get("/events/summary", requireAdmin, async (_req, res) => {
   const now = new Date();
   const [totalRow] = await db.select({ count: count() }).from(eventsTable).where(eq(eventsTable.isPublished, true));
   const allEvents = await db.select().from(eventsTable).where(eq(eventsTable.isPublished, true));
@@ -111,8 +113,8 @@ router.get("/events", async (req, res) => {
   res.json({ data: enriched, meta: { page, limit, total, totalPages: Math.ceil(total / limit) } });
 });
 
-// POST /events
-router.post("/events", async (req, res) => {
+// POST /events — admin only
+router.post("/events", requireAdmin, async (req, res) => {
   const parsed = CreateEventBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.flatten() });
@@ -138,7 +140,7 @@ router.post("/events", async (req, res) => {
   res.status(201).json(serializeEvent(event, await getSeatsAvailable(event.id, event.capacity)));
 });
 
-// GET /events/:slug/by-slug
+// GET /events/:slug/by-slug — public, published events only
 router.get("/events/:slug/by-slug", async (req, res) => {
   const parsed = GetEventBySlugParams.safeParse(req.params);
   if (!parsed.success) {
@@ -150,7 +152,7 @@ router.get("/events/:slug/by-slug", async (req, res) => {
     .from(eventsTable)
     .where(eq(eventsTable.slug, parsed.data.slug))
     .limit(1);
-  if (!event) {
+  if (!event || !event.isPublished) {
     res.status(404).json({ error: "Not found" });
     return;
   }
@@ -158,6 +160,7 @@ router.get("/events/:slug/by-slug", async (req, res) => {
 });
 
 // GET /events/:id
+// GET /events/:id — public, published events only
 router.get("/events/:id", async (req, res) => {
   const parsed = GetEventParams.safeParse(req.params);
   if (!parsed.success) {
@@ -169,15 +172,15 @@ router.get("/events/:id", async (req, res) => {
     .from(eventsTable)
     .where(eq(eventsTable.id, parsed.data.id))
     .limit(1);
-  if (!event) {
+  if (!event || !event.isPublished) {
     res.status(404).json({ error: "Not found" });
     return;
   }
   res.json(serializeEvent(event, await getSeatsAvailable(event.id, event.capacity)));
 });
 
-// PUT /events/:id
-router.put("/events/:id", async (req, res) => {
+// PUT /events/:id — admin only
+router.put("/events/:id", requireAdmin, async (req, res) => {
   const idParsed = GetEventParams.safeParse(req.params);
   if (!idParsed.success) {
     res.status(400).json({ error: idParsed.error.flatten() });
@@ -201,8 +204,8 @@ router.put("/events/:id", async (req, res) => {
   res.json(serializeEvent(event, await getSeatsAvailable(event.id, event.capacity)));
 });
 
-// DELETE /events/:id
-router.delete("/events/:id", async (req, res) => {
+// DELETE /events/:id — admin only
+router.delete("/events/:id", requireAdmin, async (req, res) => {
   const parsed = GetEventParams.safeParse(req.params);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.flatten() });

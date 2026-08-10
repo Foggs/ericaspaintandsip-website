@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/admin/"
+title = "Erica's Paint & Sip — Admin"
+description = "Private admin panel for Erica's Paint & Sip. Allows the site owner to manage events/classes, gallery photos, and blog posts. Protected by Clerk authentication with an admin allowlist — public visitors never see this."
+version = "1.0.0"
+id = "artifacts/admin"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/admin/" ]
+localPort = 23744
+
+[services.development]
+run = "pnpm --filter @workspace/admin run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/admin", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/admin/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23744"
+BASE_PATH = "/admin/"

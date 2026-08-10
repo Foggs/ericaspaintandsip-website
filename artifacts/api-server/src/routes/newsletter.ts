@@ -6,6 +6,7 @@ import {
   ListNewsletterSubscribersQueryParams,
   SubscribeNewsletterBody,
 } from "@workspace/api-zod";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router = Router();
 
@@ -40,7 +41,8 @@ router.post("/newsletter/subscribe", async (req, res) => {
 });
 
 // GET /newsletter/subscribers
-router.get("/newsletter/subscribers", async (req, res) => {
+// GET /newsletter/subscribers — admin only (subscriber PII)
+router.get("/newsletter/subscribers", requireAdmin, async (req, res) => {
   const parsed = ListNewsletterSubscribersQueryParams.safeParse(req.query);
   const page = parsed.success ? parsed.data.page : 1;
   const limit = parsed.success ? parsed.data.limit : 50;

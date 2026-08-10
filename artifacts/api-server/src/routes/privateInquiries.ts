@@ -8,6 +8,7 @@ import {
   GetPrivateInquiryParams,
   DeletePrivateInquiryParams,
 } from "@workspace/api-zod";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router = Router();
 
@@ -15,8 +16,8 @@ function serialize(i: typeof privateInquiriesTable.$inferSelect) {
   return { ...i, createdAt: i.createdAt.toISOString() };
 }
 
-// GET /private-inquiries
-router.get("/private-inquiries", async (req, res) => {
+// GET /private-inquiries — admin only (contains customer PII)
+router.get("/private-inquiries", requireAdmin, async (req, res) => {
   const parsed = ListPrivateInquiriesQueryParams.safeParse(req.query);
   const page = parsed.success ? parsed.data.page : 1;
   const limit = parsed.success ? parsed.data.limit : 20;
@@ -50,7 +51,8 @@ router.post("/private-inquiries", async (req, res) => {
 });
 
 // GET /private-inquiries/:id
-router.get("/private-inquiries/:id", async (req, res) => {
+// GET /private-inquiries/:id — admin only
+router.get("/private-inquiries/:id", requireAdmin, async (req, res) => {
   const parsed = GetPrivateInquiryParams.safeParse(req.params);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.flatten() });
@@ -68,7 +70,8 @@ router.get("/private-inquiries/:id", async (req, res) => {
 });
 
 // DELETE /private-inquiries/:id
-router.delete("/private-inquiries/:id", async (req, res) => {
+// DELETE /private-inquiries/:id — admin only
+router.delete("/private-inquiries/:id", requireAdmin, async (req, res) => {
   const parsed = DeletePrivateInquiryParams.safeParse(req.params);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.flatten() });

@@ -9,6 +9,7 @@ import {
   GetPostParams,
   GetPostBySlugParams,
 } from "@workspace/api-zod";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router = Router();
 
@@ -50,8 +51,8 @@ router.get("/posts", async (req, res) => {
   res.json({ data, meta: { page, limit, total, totalPages: Math.ceil(total / limit) } });
 });
 
-// POST /posts
-router.post("/posts", async (req, res) => {
+// POST /posts — admin only
+router.post("/posts", requireAdmin, async (req, res) => {
   const parsed = CreatePostBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.flatten() });
@@ -76,6 +77,7 @@ router.post("/posts", async (req, res) => {
 });
 
 // GET /posts/:slug/by-slug
+// GET /posts/:slug/by-slug — public, published posts only
 router.get("/posts/:slug/by-slug", async (req, res) => {
   const parsed = GetPostBySlugParams.safeParse(req.params);
   if (!parsed.success) {
@@ -87,7 +89,7 @@ router.get("/posts/:slug/by-slug", async (req, res) => {
     .from(postsTable)
     .where(eq(postsTable.slug, parsed.data.slug))
     .limit(1);
-  if (!post) {
+  if (!post || !post.isPublished) {
     res.status(404).json({ error: "Not found" });
     return;
   }
@@ -95,6 +97,7 @@ router.get("/posts/:slug/by-slug", async (req, res) => {
 });
 
 // GET /posts/:id
+// GET /posts/:id — public, published posts only
 router.get("/posts/:id", async (req, res) => {
   const parsed = GetPostParams.safeParse(req.params);
   if (!parsed.success) {
@@ -102,15 +105,15 @@ router.get("/posts/:id", async (req, res) => {
     return;
   }
   const [post] = await db.select().from(postsTable).where(eq(postsTable.id, parsed.data.id));
-  if (!post) {
+  if (!post || !post.isPublished) {
     res.status(404).json({ error: "Not found" });
     return;
   }
   res.json(serialize(post));
 });
 
-// PUT /posts/:id
-router.put("/posts/:id", async (req, res) => {
+// PUT /posts/:id — admin only
+router.put("/posts/:id", requireAdmin, async (req, res) => {
   const idParsed = GetPostParams.safeParse(req.params);
   if (!idParsed.success) {
     res.status(400).json({ error: idParsed.error.flatten() });
@@ -139,8 +142,8 @@ router.put("/posts/:id", async (req, res) => {
   res.json(serialize(post));
 });
 
-// DELETE /posts/:id
-router.delete("/posts/:id", async (req, res) => {
+// DELETE /posts/:id — admin only
+router.delete("/posts/:id", requireAdmin, async (req, res) => {
   const parsed = GetPostParams.safeParse(req.params);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.flatten() });

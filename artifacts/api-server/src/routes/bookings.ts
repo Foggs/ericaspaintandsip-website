@@ -9,11 +9,12 @@ import {
   UpdateBookingStatusParams,
   UpdateBookingStatusBody,
 } from "@workspace/api-zod";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router = Router();
 
-// GET /bookings
-router.get("/bookings", async (req, res) => {
+// GET /bookings — admin only (exposes customer PII)
+router.get("/bookings", requireAdmin, async (req, res) => {
   const parsed = ListBookingsQueryParams.safeParse(req.query);
   const page = parsed.success ? parsed.data.page : 1;
   const limit = parsed.success ? parsed.data.limit : 20;
@@ -49,7 +50,8 @@ router.post("/bookings", async (req, res) => {
 });
 
 // GET /bookings/:id
-router.get("/bookings/:id", async (req, res) => {
+// GET /bookings/:id — admin only
+router.get("/bookings/:id", requireAdmin, async (req, res) => {
   const parsed = GetBookingParams.safeParse(req.params);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.flatten() });
@@ -64,7 +66,8 @@ router.get("/bookings/:id", async (req, res) => {
 });
 
 // PATCH /bookings/:id
-router.patch("/bookings/:id", async (req, res) => {
+// PATCH /bookings/:id — admin only (status update)
+router.patch("/bookings/:id", requireAdmin, async (req, res) => {
   const idParsed = UpdateBookingStatusParams.safeParse(req.params);
   if (!idParsed.success) {
     res.status(400).json({ error: idParsed.error.flatten() });

@@ -56,7 +56,7 @@ export const ListEventsResponse = zod.object({
 });
 
 /**
- * @summary Create a new event
+ * @summary Create a new event (admin only)
  */
 export const createEventBodyIsPublishedDefault = false;
 
@@ -101,7 +101,7 @@ export const GetUpcomingEventsResponse = zod.array(
 );
 
 /**
- * @summary Aggregate stats — total events, upcoming count, total bookings
+ * @summary Aggregate stats — total events, upcoming count, total bookings (admin only)
  */
 export const GetEventsSummaryResponse = zod.object({
   totalEvents: zod.number(),
@@ -134,7 +134,7 @@ export const GetEventResponse = zod.object({
 });
 
 /**
- * @summary Update an event
+ * @summary Update an event (admin only)
  */
 export const UpdateEventParams = zod.object({
   id: zod.coerce.number(),
@@ -171,7 +171,7 @@ export const UpdateEventResponse = zod.object({
 });
 
 /**
- * @summary Delete an event
+ * @summary Delete an event (admin only)
  */
 export const DeleteEventParams = zod.object({
   id: zod.coerce.number(),
@@ -201,7 +201,7 @@ export const GetEventBySlugResponse = zod.object({
 });
 
 /**
- * @summary List all bookings
+ * @summary List all bookings (admin only — contains customer PII)
  */
 export const listBookingsQueryPageDefault = 1;
 export const listBookingsQueryLimitDefault = 20;
@@ -253,7 +253,7 @@ export const CreateBookingBody = zod.object({
 });
 
 /**
- * @summary Get booking by ID
+ * @summary Get booking by ID (admin only)
  */
 export const GetBookingParams = zod.object({
   id: zod.coerce.number(),
@@ -272,7 +272,7 @@ export const GetBookingResponse = zod.object({
 });
 
 /**
- * @summary Update booking status
+ * @summary Update booking status (admin only)
  */
 export const UpdateBookingStatusParams = zod.object({
   id: zod.coerce.number(),
@@ -295,7 +295,7 @@ export const UpdateBookingStatusResponse = zod.object({
 });
 
 /**
- * @summary List all private event inquiries
+ * @summary List all private event inquiries (admin only — contains customer PII)
  */
 export const listPrivateInquiriesQueryPageDefault = 1;
 export const listPrivateInquiriesQueryLimitDefault = 20;
@@ -339,7 +339,7 @@ export const CreatePrivateInquiryBody = zod.object({
 });
 
 /**
- * @summary Get inquiry by ID
+ * @summary Get inquiry by ID (admin only)
  */
 export const GetPrivateInquiryParams = zod.object({
   id: zod.coerce.number(),
@@ -357,7 +357,7 @@ export const GetPrivateInquiryResponse = zod.object({
 });
 
 /**
- * @summary Delete an inquiry
+ * @summary Delete an inquiry (admin only)
  */
 export const DeletePrivateInquiryParams = zod.object({
   id: zod.coerce.number(),
@@ -395,7 +395,7 @@ export const ListGalleryPhotosResponse = zod.object({
 });
 
 /**
- * @summary Add a gallery photo
+ * @summary Add a gallery photo (admin only)
  */
 export const CreateGalleryPhotoBody = zod.object({
   imageUrl: zod.string(),
@@ -450,7 +450,7 @@ export const GetGalleryPhotoResponse = zod.object({
 });
 
 /**
- * @summary Update a gallery photo
+ * @summary Update a gallery photo (admin only)
  */
 export const UpdateGalleryPhotoParams = zod.object({
   id: zod.coerce.number(),
@@ -473,7 +473,7 @@ export const UpdateGalleryPhotoResponse = zod.object({
 });
 
 /**
- * @summary Delete a gallery photo
+ * @summary Delete a gallery photo (admin only)
  */
 export const DeleteGalleryPhotoParams = zod.object({
   id: zod.coerce.number(),
@@ -513,7 +513,7 @@ export const ListPostsResponse = zod.object({
 });
 
 /**
- * @summary Create a blog post
+ * @summary Create a blog post (admin only)
  */
 export const createPostBodyIsPublishedDefault = false;
 
@@ -568,7 +568,7 @@ export const GetPostResponse = zod.object({
 });
 
 /**
- * @summary Update a blog post
+ * @summary Update a blog post (admin only)
  */
 export const UpdatePostParams = zod.object({
   id: zod.coerce.number(),
@@ -598,7 +598,7 @@ export const UpdatePostResponse = zod.object({
 });
 
 /**
- * @summary Delete a post
+ * @summary Delete a post (admin only)
  */
 export const DeletePostParams = zod.object({
   id: zod.coerce.number(),
@@ -624,6 +624,162 @@ export const GetPostBySlugResponse = zod.object({
 });
 
 /**
+ * Returns a presigned GCS URL for direct upload. The client sends JSON
+metadata here, then uploads the file directly to the returned URL.
+Requires admin authentication.
+
+ * @summary Request a presigned URL for file upload
+ */
+
+export const RequestUploadUrlBody = zod.object({
+  name: zod.string().min(1).describe("Original file name"),
+  size: zod.number().min(1).describe("File size in bytes"),
+  contentType: zod.string().min(1).describe("MIME type (e.g. image\/jpeg)"),
+});
+
+export const RequestUploadUrlResponse = zod.object({
+  uploadURL: zod.string().url().describe("Presigned GCS URL for PUT upload"),
+  objectPath: zod
+    .string()
+    .describe(
+      "Normalized object path (e.g. \/objects\/uploads\/uuid). Store in DB.",
+    ),
+  metadata: zod
+    .object({
+      name: zod.string().min(1).describe("Original file name"),
+      size: zod.number().min(1).describe("File size in bytes"),
+      contentType: zod.string().min(1).describe("MIME type (e.g. image\/jpeg)"),
+    })
+    .optional(),
+});
+
+/**
+ * @summary Serve an uploaded object by its path
+ */
+export const GetStorageObjectParams = zod.object({
+  objectPath: zod.coerce.string(),
+});
+
+/**
+ * @summary Returns the signed-in user's Clerk ID (any authenticated user — no admin allowlist required; used for initial ADMIN_USER_IDS setup)
+ */
+export const GetAdminMeResponse = zod.object({
+  userId: zod.string(),
+});
+
+/**
+ * @summary Get a single event by ID regardless of published status (admin only)
+ */
+export const GetAdminEventParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetAdminEventResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  slug: zod.string(),
+  date: zod.coerce.date(),
+  durationMinutes: zod.number().nullish(),
+  location: zod.string().nullish(),
+  price: zod.number().nullish(),
+  capacity: zod.number().nullish(),
+  seatsAvailable: zod.number().nullish(),
+  description: zod.string().nullish(),
+  coverImageUrl: zod.string().nullish(),
+  isPublished: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Get a single post by ID regardless of published status (admin only)
+ */
+export const GetAdminPostParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetAdminPostResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  slug: zod.string(),
+  publishedDate: zod.coerce.date().nullish(),
+  excerpt: zod.string().nullish(),
+  content: zod.string().nullish(),
+  coverImageUrl: zod.string().nullish(),
+  isPublished: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary List all events including unpublished (admin only)
+ */
+export const listAdminEventsQueryPageDefault = 1;
+export const listAdminEventsQueryLimitDefault = 50;
+
+export const ListAdminEventsQueryParams = zod.object({
+  page: zod.coerce.number().default(listAdminEventsQueryPageDefault),
+  limit: zod.coerce.number().default(listAdminEventsQueryLimitDefault),
+});
+
+export const ListAdminEventsResponse = zod.object({
+  data: zod.array(
+    zod.object({
+      id: zod.number(),
+      title: zod.string(),
+      slug: zod.string(),
+      date: zod.coerce.date(),
+      durationMinutes: zod.number().nullish(),
+      location: zod.string().nullish(),
+      price: zod.number().nullish(),
+      capacity: zod.number().nullish(),
+      seatsAvailable: zod.number().nullish(),
+      description: zod.string().nullish(),
+      coverImageUrl: zod.string().nullish(),
+      isPublished: zod.boolean(),
+      createdAt: zod.coerce.date(),
+    }),
+  ),
+  meta: zod.object({
+    page: zod.number(),
+    limit: zod.number(),
+    total: zod.number(),
+    totalPages: zod.number(),
+  }),
+});
+
+/**
+ * @summary List all posts including unpublished (admin only)
+ */
+export const listAdminPostsQueryPageDefault = 1;
+export const listAdminPostsQueryLimitDefault = 50;
+
+export const ListAdminPostsQueryParams = zod.object({
+  page: zod.coerce.number().default(listAdminPostsQueryPageDefault),
+  limit: zod.coerce.number().default(listAdminPostsQueryLimitDefault),
+});
+
+export const ListAdminPostsResponse = zod.object({
+  data: zod.array(
+    zod.object({
+      id: zod.number(),
+      title: zod.string(),
+      slug: zod.string(),
+      publishedDate: zod.coerce.date().nullish(),
+      excerpt: zod.string().nullish(),
+      content: zod.string().nullish(),
+      coverImageUrl: zod.string().nullish(),
+      isPublished: zod.boolean(),
+      createdAt: zod.coerce.date(),
+    }),
+  ),
+  meta: zod.object({
+    page: zod.number(),
+    limit: zod.number(),
+    total: zod.number(),
+    totalPages: zod.number(),
+  }),
+});
+
+/**
  * @summary Subscribe to the newsletter
  */
 export const SubscribeNewsletterBody = zod.object({
@@ -632,7 +788,7 @@ export const SubscribeNewsletterBody = zod.object({
 });
 
 /**
- * @summary List newsletter subscribers
+ * @summary List newsletter subscribers (admin only — subscriber PII)
  */
 export const listNewsletterSubscribersQueryPageDefault = 1;
 export const listNewsletterSubscribersQueryLimitDefault = 50;

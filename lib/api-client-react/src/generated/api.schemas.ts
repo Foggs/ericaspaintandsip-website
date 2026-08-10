@@ -185,6 +185,36 @@ export interface PostListResponse {
   meta: PaginationMeta;
 }
 
+export interface UploadUrlRequest {
+  /**
+   * Original file name
+   * @minLength 1
+   */
+  name: string;
+  /**
+   * File size in bytes
+   * @minimum 1
+   */
+  size: number;
+  /**
+   * MIME type (e.g. image/jpeg)
+   * @minLength 1
+   */
+  contentType: string;
+}
+
+export interface UploadUrlResponse {
+  /** Presigned GCS URL for PUT upload */
+  uploadURL: string;
+  /** Normalized object path (e.g. /objects/uploads/uuid). Store in DB. */
+  objectPath: string;
+  metadata?: UploadUrlRequest;
+}
+
+export interface AdminMe {
+  userId: string;
+}
+
 export interface NewsletterSubscriber {
   id: number;
   name?: string | null;
@@ -252,6 +282,16 @@ export type ListPostsParams = {
 };
 
 export type GetRecentPostsParams = {
+  limit?: number;
+};
+
+export type ListAdminEventsParams = {
+  page?: number;
+  limit?: number;
+};
+
+export type ListAdminPostsParams = {
+  page?: number;
   limit?: number;
 };
 

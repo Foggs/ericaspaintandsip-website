@@ -11,6 +11,7 @@ import {
   UpdateGalleryPhotoBody,
   DeleteGalleryPhotoParams,
 } from "@workspace/api-zod";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router = Router();
 
@@ -63,8 +64,8 @@ router.get("/gallery", async (req, res) => {
   res.json({ data, meta: { page, limit, total, totalPages: Math.ceil(total / limit) } });
 });
 
-// POST /gallery
-router.post("/gallery", async (req, res) => {
+// POST /gallery — admin only
+router.post("/gallery", requireAdmin, async (req, res) => {
   const parsed = CreateGalleryPhotoBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.flatten() });
@@ -92,8 +93,8 @@ router.get("/gallery/:id", async (req, res) => {
   res.json({ ...photo, createdAt: photo.createdAt.toISOString() });
 });
 
-// PUT /gallery/:id
-router.put("/gallery/:id", async (req, res) => {
+// PUT /gallery/:id — admin only
+router.put("/gallery/:id", requireAdmin, async (req, res) => {
   const idParsed = UpdateGalleryPhotoParams.safeParse(req.params);
   if (!idParsed.success) {
     res.status(400).json({ error: idParsed.error.flatten() });
@@ -116,8 +117,8 @@ router.put("/gallery/:id", async (req, res) => {
   res.json({ ...photo, createdAt: photo.createdAt.toISOString() });
 });
 
-// DELETE /gallery/:id
-router.delete("/gallery/:id", async (req, res) => {
+// DELETE /gallery/:id — admin only
+router.delete("/gallery/:id", requireAdmin, async (req, res) => {
   const parsed = DeleteGalleryPhotoParams.safeParse(req.params);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.flatten() });

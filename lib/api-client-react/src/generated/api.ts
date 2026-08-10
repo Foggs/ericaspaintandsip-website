@@ -17,6 +17,7 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
+  AdminMe,
   Booking,
   BookingListResponse,
   CreateBookingBody,
@@ -33,6 +34,8 @@ import type {
   GetRecentPostsParams,
   GetUpcomingEventsParams,
   HealthStatus,
+  ListAdminEventsParams,
+  ListAdminPostsParams,
   ListBookingsParams,
   ListEventsParams,
   ListGalleryPhotosParams,
@@ -47,6 +50,8 @@ import type {
   PrivateInquiryListResponse,
   SubscribeNewsletterBody,
   UpdateBookingStatusBody,
+  UploadUrlRequest,
+  UploadUrlResponse,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -228,7 +233,7 @@ export function useListEvents<
 }
 
 /**
- * @summary Create a new event
+ * @summary Create a new event (admin only)
  */
 export const getCreateEventUrl = () => {
   return `/api/events`;
@@ -247,7 +252,7 @@ export const createEvent = async (
 };
 
 export const getCreateEventMutationOptions = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -288,13 +293,13 @@ export type CreateEventMutationResult = NonNullable<
   Awaited<ReturnType<typeof createEvent>>
 >;
 export type CreateEventMutationBody = BodyType<CreateEventBody>;
-export type CreateEventMutationError = ErrorType<unknown>;
+export type CreateEventMutationError = ErrorType<void>;
 
 /**
- * @summary Create a new event
+ * @summary Create a new event (admin only)
  */
 export const useCreateEvent = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -411,7 +416,7 @@ export function useGetUpcomingEvents<
 }
 
 /**
- * @summary Aggregate stats — total events, upcoming count, total bookings
+ * @summary Aggregate stats — total events, upcoming count, total bookings (admin only)
  */
 export const getGetEventsSummaryUrl = () => {
   return `/api/events/summary`;
@@ -432,7 +437,7 @@ export const getGetEventsSummaryQueryKey = () => {
 
 export const getGetEventsSummaryQueryOptions = <
   TData = Awaited<ReturnType<typeof getEventsSummary>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(options?: {
   query?: UseQueryOptions<
     Awaited<ReturnType<typeof getEventsSummary>>,
@@ -459,15 +464,15 @@ export const getGetEventsSummaryQueryOptions = <
 export type GetEventsSummaryQueryResult = NonNullable<
   Awaited<ReturnType<typeof getEventsSummary>>
 >;
-export type GetEventsSummaryQueryError = ErrorType<unknown>;
+export type GetEventsSummaryQueryError = ErrorType<void>;
 
 /**
- * @summary Aggregate stats — total events, upcoming count, total bookings
+ * @summary Aggregate stats — total events, upcoming count, total bookings (admin only)
  */
 
 export function useGetEventsSummary<
   TData = Awaited<ReturnType<typeof getEventsSummary>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(options?: {
   query?: UseQueryOptions<
     Awaited<ReturnType<typeof getEventsSummary>>,
@@ -571,7 +576,7 @@ export function useGetEvent<
 }
 
 /**
- * @summary Update an event
+ * @summary Update an event (admin only)
  */
 export const getUpdateEventUrl = (id: number) => {
   return `/api/events/${id}`;
@@ -591,7 +596,7 @@ export const updateEvent = async (
 };
 
 export const getUpdateEventMutationOptions = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -632,13 +637,13 @@ export type UpdateEventMutationResult = NonNullable<
   Awaited<ReturnType<typeof updateEvent>>
 >;
 export type UpdateEventMutationBody = BodyType<CreateEventBody>;
-export type UpdateEventMutationError = ErrorType<unknown>;
+export type UpdateEventMutationError = ErrorType<void>;
 
 /**
- * @summary Update an event
+ * @summary Update an event (admin only)
  */
 export const useUpdateEvent = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -658,7 +663,7 @@ export const useUpdateEvent = <
 };
 
 /**
- * @summary Delete an event
+ * @summary Delete an event (admin only)
  */
 export const getDeleteEventUrl = (id: number) => {
   return `/api/events/${id}`;
@@ -675,7 +680,7 @@ export const deleteEvent = async (
 };
 
 export const getDeleteEventMutationOptions = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -716,13 +721,13 @@ export type DeleteEventMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteEvent>>
 >;
 
-export type DeleteEventMutationError = ErrorType<unknown>;
+export type DeleteEventMutationError = ErrorType<void>;
 
 /**
- * @summary Delete an event
+ * @summary Delete an event (admin only)
  */
 export const useDeleteEvent = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -829,7 +834,7 @@ export function useGetEventBySlug<
 }
 
 /**
- * @summary List all bookings
+ * @summary List all bookings (admin only — contains customer PII)
  */
 export const getListBookingsUrl = (params?: ListBookingsParams) => {
   const normalizedParams = new URLSearchParams();
@@ -863,7 +868,7 @@ export const getListBookingsQueryKey = (params?: ListBookingsParams) => {
 
 export const getListBookingsQueryOptions = <
   TData = Awaited<ReturnType<typeof listBookings>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(
   params?: ListBookingsParams,
   options?: {
@@ -893,15 +898,15 @@ export const getListBookingsQueryOptions = <
 export type ListBookingsQueryResult = NonNullable<
   Awaited<ReturnType<typeof listBookings>>
 >;
-export type ListBookingsQueryError = ErrorType<unknown>;
+export type ListBookingsQueryError = ErrorType<void>;
 
 /**
- * @summary List all bookings
+ * @summary List all bookings (admin only — contains customer PII)
  */
 
 export function useListBookings<
   TData = Awaited<ReturnType<typeof listBookings>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(
   params?: ListBookingsParams,
   options?: {
@@ -1009,7 +1014,7 @@ export const useCreateBooking = <
 };
 
 /**
- * @summary Get booking by ID
+ * @summary Get booking by ID (admin only)
  */
 export const getGetBookingUrl = (id: number) => {
   return `/api/bookings/${id}`;
@@ -1031,7 +1036,7 @@ export const getGetBookingQueryKey = (id: number) => {
 
 export const getGetBookingQueryOptions = <
   TData = Awaited<ReturnType<typeof getBooking>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(
   id: number,
   options?: {
@@ -1066,15 +1071,15 @@ export const getGetBookingQueryOptions = <
 export type GetBookingQueryResult = NonNullable<
   Awaited<ReturnType<typeof getBooking>>
 >;
-export type GetBookingQueryError = ErrorType<unknown>;
+export type GetBookingQueryError = ErrorType<void>;
 
 /**
- * @summary Get booking by ID
+ * @summary Get booking by ID (admin only)
  */
 
 export function useGetBooking<
   TData = Awaited<ReturnType<typeof getBooking>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(
   id: number,
   options?: {
@@ -1096,7 +1101,7 @@ export function useGetBooking<
 }
 
 /**
- * @summary Update booking status
+ * @summary Update booking status (admin only)
  */
 export const getUpdateBookingStatusUrl = (id: number) => {
   return `/api/bookings/${id}`;
@@ -1116,7 +1121,7 @@ export const updateBookingStatus = async (
 };
 
 export const getUpdateBookingStatusMutationOptions = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -1157,13 +1162,13 @@ export type UpdateBookingStatusMutationResult = NonNullable<
   Awaited<ReturnType<typeof updateBookingStatus>>
 >;
 export type UpdateBookingStatusMutationBody = BodyType<UpdateBookingStatusBody>;
-export type UpdateBookingStatusMutationError = ErrorType<unknown>;
+export type UpdateBookingStatusMutationError = ErrorType<void>;
 
 /**
- * @summary Update booking status
+ * @summary Update booking status (admin only)
  */
 export const useUpdateBookingStatus = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -1183,7 +1188,7 @@ export const useUpdateBookingStatus = <
 };
 
 /**
- * @summary List all private event inquiries
+ * @summary List all private event inquiries (admin only — contains customer PII)
  */
 export const getListPrivateInquiriesUrl = (
   params?: ListPrivateInquiriesParams,
@@ -1224,7 +1229,7 @@ export const getListPrivateInquiriesQueryKey = (
 
 export const getListPrivateInquiriesQueryOptions = <
   TData = Awaited<ReturnType<typeof listPrivateInquiries>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(
   params?: ListPrivateInquiriesParams,
   options?: {
@@ -1256,15 +1261,15 @@ export const getListPrivateInquiriesQueryOptions = <
 export type ListPrivateInquiriesQueryResult = NonNullable<
   Awaited<ReturnType<typeof listPrivateInquiries>>
 >;
-export type ListPrivateInquiriesQueryError = ErrorType<unknown>;
+export type ListPrivateInquiriesQueryError = ErrorType<void>;
 
 /**
- * @summary List all private event inquiries
+ * @summary List all private event inquiries (admin only — contains customer PII)
  */
 
 export function useListPrivateInquiries<
   TData = Awaited<ReturnType<typeof listPrivateInquiries>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(
   params?: ListPrivateInquiriesParams,
   options?: {
@@ -1373,7 +1378,7 @@ export const useCreatePrivateInquiry = <
 };
 
 /**
- * @summary Get inquiry by ID
+ * @summary Get inquiry by ID (admin only)
  */
 export const getGetPrivateInquiryUrl = (id: number) => {
   return `/api/private-inquiries/${id}`;
@@ -1395,7 +1400,7 @@ export const getGetPrivateInquiryQueryKey = (id: number) => {
 
 export const getGetPrivateInquiryQueryOptions = <
   TData = Awaited<ReturnType<typeof getPrivateInquiry>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(
   id: number,
   options?: {
@@ -1430,15 +1435,15 @@ export const getGetPrivateInquiryQueryOptions = <
 export type GetPrivateInquiryQueryResult = NonNullable<
   Awaited<ReturnType<typeof getPrivateInquiry>>
 >;
-export type GetPrivateInquiryQueryError = ErrorType<unknown>;
+export type GetPrivateInquiryQueryError = ErrorType<void>;
 
 /**
- * @summary Get inquiry by ID
+ * @summary Get inquiry by ID (admin only)
  */
 
 export function useGetPrivateInquiry<
   TData = Awaited<ReturnType<typeof getPrivateInquiry>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(
   id: number,
   options?: {
@@ -1460,7 +1465,7 @@ export function useGetPrivateInquiry<
 }
 
 /**
- * @summary Delete an inquiry
+ * @summary Delete an inquiry (admin only)
  */
 export const getDeletePrivateInquiryUrl = (id: number) => {
   return `/api/private-inquiries/${id}`;
@@ -1477,7 +1482,7 @@ export const deletePrivateInquiry = async (
 };
 
 export const getDeletePrivateInquiryMutationOptions = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -1518,13 +1523,13 @@ export type DeletePrivateInquiryMutationResult = NonNullable<
   Awaited<ReturnType<typeof deletePrivateInquiry>>
 >;
 
-export type DeletePrivateInquiryMutationError = ErrorType<unknown>;
+export type DeletePrivateInquiryMutationError = ErrorType<void>;
 
 /**
- * @summary Delete an inquiry
+ * @summary Delete an inquiry (admin only)
  */
 export const useDeletePrivateInquiry = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -1644,7 +1649,7 @@ export function useListGalleryPhotos<
 }
 
 /**
- * @summary Add a gallery photo
+ * @summary Add a gallery photo (admin only)
  */
 export const getCreateGalleryPhotoUrl = () => {
   return `/api/gallery`;
@@ -1663,7 +1668,7 @@ export const createGalleryPhoto = async (
 };
 
 export const getCreateGalleryPhotoMutationOptions = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -1704,13 +1709,13 @@ export type CreateGalleryPhotoMutationResult = NonNullable<
   Awaited<ReturnType<typeof createGalleryPhoto>>
 >;
 export type CreateGalleryPhotoMutationBody = BodyType<CreateGalleryPhotoBody>;
-export type CreateGalleryPhotoMutationError = ErrorType<unknown>;
+export type CreateGalleryPhotoMutationError = ErrorType<void>;
 
 /**
- * @summary Add a gallery photo
+ * @summary Add a gallery photo (admin only)
  */
 export const useCreateGalleryPhoto = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -1992,7 +1997,7 @@ export function useGetGalleryPhoto<
 }
 
 /**
- * @summary Update a gallery photo
+ * @summary Update a gallery photo (admin only)
  */
 export const getUpdateGalleryPhotoUrl = (id: number) => {
   return `/api/gallery/${id}`;
@@ -2012,7 +2017,7 @@ export const updateGalleryPhoto = async (
 };
 
 export const getUpdateGalleryPhotoMutationOptions = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -2053,13 +2058,13 @@ export type UpdateGalleryPhotoMutationResult = NonNullable<
   Awaited<ReturnType<typeof updateGalleryPhoto>>
 >;
 export type UpdateGalleryPhotoMutationBody = BodyType<CreateGalleryPhotoBody>;
-export type UpdateGalleryPhotoMutationError = ErrorType<unknown>;
+export type UpdateGalleryPhotoMutationError = ErrorType<void>;
 
 /**
- * @summary Update a gallery photo
+ * @summary Update a gallery photo (admin only)
  */
 export const useUpdateGalleryPhoto = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -2079,7 +2084,7 @@ export const useUpdateGalleryPhoto = <
 };
 
 /**
- * @summary Delete a gallery photo
+ * @summary Delete a gallery photo (admin only)
  */
 export const getDeleteGalleryPhotoUrl = (id: number) => {
   return `/api/gallery/${id}`;
@@ -2096,7 +2101,7 @@ export const deleteGalleryPhoto = async (
 };
 
 export const getDeleteGalleryPhotoMutationOptions = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -2137,13 +2142,13 @@ export type DeleteGalleryPhotoMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteGalleryPhoto>>
 >;
 
-export type DeleteGalleryPhotoMutationError = ErrorType<unknown>;
+export type DeleteGalleryPhotoMutationError = ErrorType<void>;
 
 /**
- * @summary Delete a gallery photo
+ * @summary Delete a gallery photo (admin only)
  */
 export const useDeleteGalleryPhoto = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -2257,7 +2262,7 @@ export function useListPosts<
 }
 
 /**
- * @summary Create a blog post
+ * @summary Create a blog post (admin only)
  */
 export const getCreatePostUrl = () => {
   return `/api/posts`;
@@ -2276,7 +2281,7 @@ export const createPost = async (
 };
 
 export const getCreatePostMutationOptions = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -2317,13 +2322,13 @@ export type CreatePostMutationResult = NonNullable<
   Awaited<ReturnType<typeof createPost>>
 >;
 export type CreatePostMutationBody = BodyType<CreatePostBody>;
-export type CreatePostMutationError = ErrorType<unknown>;
+export type CreatePostMutationError = ErrorType<void>;
 
 /**
- * @summary Create a blog post
+ * @summary Create a blog post (admin only)
  */
 export const useCreatePost = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -2514,7 +2519,7 @@ export function useGetPost<
 }
 
 /**
- * @summary Update a blog post
+ * @summary Update a blog post (admin only)
  */
 export const getUpdatePostUrl = (id: number) => {
   return `/api/posts/${id}`;
@@ -2534,7 +2539,7 @@ export const updatePost = async (
 };
 
 export const getUpdatePostMutationOptions = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -2575,13 +2580,13 @@ export type UpdatePostMutationResult = NonNullable<
   Awaited<ReturnType<typeof updatePost>>
 >;
 export type UpdatePostMutationBody = BodyType<CreatePostBody>;
-export type UpdatePostMutationError = ErrorType<unknown>;
+export type UpdatePostMutationError = ErrorType<void>;
 
 /**
- * @summary Update a blog post
+ * @summary Update a blog post (admin only)
  */
 export const useUpdatePost = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -2601,7 +2606,7 @@ export const useUpdatePost = <
 };
 
 /**
- * @summary Delete a post
+ * @summary Delete a post (admin only)
  */
 export const getDeletePostUrl = (id: number) => {
   return `/api/posts/${id}`;
@@ -2618,7 +2623,7 @@ export const deletePost = async (
 };
 
 export const getDeletePostMutationOptions = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -2659,13 +2664,13 @@ export type DeletePostMutationResult = NonNullable<
   Awaited<ReturnType<typeof deletePost>>
 >;
 
-export type DeletePostMutationError = ErrorType<unknown>;
+export type DeletePostMutationError = ErrorType<void>;
 
 /**
- * @summary Delete a post
+ * @summary Delete a post (admin only)
  */
 export const useDeletePost = <
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -2772,6 +2777,620 @@ export function useGetPostBySlug<
 }
 
 /**
+ * Returns a presigned GCS URL for direct upload. The client sends JSON
+metadata here, then uploads the file directly to the returned URL.
+Requires admin authentication.
+
+ * @summary Request a presigned URL for file upload
+ */
+export const getRequestUploadUrlUrl = () => {
+  return `/api/storage/uploads/request-url`;
+};
+
+export const requestUploadUrl = async (
+  uploadUrlRequest: UploadUrlRequest,
+  options?: RequestInit,
+): Promise<UploadUrlResponse> => {
+  return customFetch<UploadUrlResponse>(getRequestUploadUrlUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(uploadUrlRequest),
+  });
+};
+
+export const getRequestUploadUrlMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof requestUploadUrl>>,
+    TError,
+    { data: BodyType<UploadUrlRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof requestUploadUrl>>,
+  TError,
+  { data: BodyType<UploadUrlRequest> },
+  TContext
+> => {
+  const mutationKey = ["requestUploadUrl"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof requestUploadUrl>>,
+    { data: BodyType<UploadUrlRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return requestUploadUrl(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RequestUploadUrlMutationResult = NonNullable<
+  Awaited<ReturnType<typeof requestUploadUrl>>
+>;
+export type RequestUploadUrlMutationBody = BodyType<UploadUrlRequest>;
+export type RequestUploadUrlMutationError = ErrorType<void>;
+
+/**
+ * @summary Request a presigned URL for file upload
+ */
+export const useRequestUploadUrl = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof requestUploadUrl>>,
+    TError,
+    { data: BodyType<UploadUrlRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof requestUploadUrl>>,
+  TError,
+  { data: BodyType<UploadUrlRequest> },
+  TContext
+> => {
+  return useMutation(getRequestUploadUrlMutationOptions(options));
+};
+
+/**
+ * @summary Serve an uploaded object by its path
+ */
+export const getGetStorageObjectUrl = (objectPath: string) => {
+  return `/api/storage/objects/${objectPath}`;
+};
+
+export const getStorageObject = async (
+  objectPath: string,
+  options?: RequestInit,
+): Promise<Blob> => {
+  return customFetch<Blob>(getGetStorageObjectUrl(objectPath), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetStorageObjectQueryKey = (objectPath: string) => {
+  return [`/api/storage/objects/${objectPath}`] as const;
+};
+
+export const getGetStorageObjectQueryOptions = <
+  TData = Awaited<ReturnType<typeof getStorageObject>>,
+  TError = ErrorType<void>,
+>(
+  objectPath: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getStorageObject>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetStorageObjectQueryKey(objectPath);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getStorageObject>>
+  > = ({ signal }) =>
+    getStorageObject(objectPath, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!objectPath,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getStorageObject>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetStorageObjectQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStorageObject>>
+>;
+export type GetStorageObjectQueryError = ErrorType<void>;
+
+/**
+ * @summary Serve an uploaded object by its path
+ */
+
+export function useGetStorageObject<
+  TData = Awaited<ReturnType<typeof getStorageObject>>,
+  TError = ErrorType<void>,
+>(
+  objectPath: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getStorageObject>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetStorageObjectQueryOptions(objectPath, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Returns the signed-in user's Clerk ID (any authenticated user — no admin allowlist required; used for initial ADMIN_USER_IDS setup)
+ */
+export const getGetAdminMeUrl = () => {
+  return `/api/admin/me`;
+};
+
+export const getAdminMe = async (options?: RequestInit): Promise<AdminMe> => {
+  return customFetch<AdminMe>(getGetAdminMeUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetAdminMeQueryKey = () => {
+  return [`/api/admin/me`] as const;
+};
+
+export const getGetAdminMeQueryOptions = <
+  TData = Awaited<ReturnType<typeof getAdminMe>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getAdminMe>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetAdminMeQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAdminMe>>> = ({
+    signal,
+  }) => getAdminMe({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getAdminMe>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetAdminMeQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAdminMe>>
+>;
+export type GetAdminMeQueryError = ErrorType<void>;
+
+/**
+ * @summary Returns the signed-in user's Clerk ID (any authenticated user — no admin allowlist required; used for initial ADMIN_USER_IDS setup)
+ */
+
+export function useGetAdminMe<
+  TData = Awaited<ReturnType<typeof getAdminMe>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getAdminMe>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetAdminMeQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Get a single event by ID regardless of published status (admin only)
+ */
+export const getGetAdminEventUrl = (id: number) => {
+  return `/api/admin/events/${id}`;
+};
+
+export const getAdminEvent = async (
+  id: number,
+  options?: RequestInit,
+): Promise<Event> => {
+  return customFetch<Event>(getGetAdminEventUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetAdminEventQueryKey = (id: number) => {
+  return [`/api/admin/events/${id}`] as const;
+};
+
+export const getGetAdminEventQueryOptions = <
+  TData = Awaited<ReturnType<typeof getAdminEvent>>,
+  TError = ErrorType<void>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getAdminEvent>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetAdminEventQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAdminEvent>>> = ({
+    signal,
+  }) => getAdminEvent(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getAdminEvent>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetAdminEventQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAdminEvent>>
+>;
+export type GetAdminEventQueryError = ErrorType<void>;
+
+/**
+ * @summary Get a single event by ID regardless of published status (admin only)
+ */
+
+export function useGetAdminEvent<
+  TData = Awaited<ReturnType<typeof getAdminEvent>>,
+  TError = ErrorType<void>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getAdminEvent>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetAdminEventQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Get a single post by ID regardless of published status (admin only)
+ */
+export const getGetAdminPostUrl = (id: number) => {
+  return `/api/admin/posts/${id}`;
+};
+
+export const getAdminPost = async (
+  id: number,
+  options?: RequestInit,
+): Promise<Post> => {
+  return customFetch<Post>(getGetAdminPostUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetAdminPostQueryKey = (id: number) => {
+  return [`/api/admin/posts/${id}`] as const;
+};
+
+export const getGetAdminPostQueryOptions = <
+  TData = Awaited<ReturnType<typeof getAdminPost>>,
+  TError = ErrorType<void>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getAdminPost>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetAdminPostQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAdminPost>>> = ({
+    signal,
+  }) => getAdminPost(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getAdminPost>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetAdminPostQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAdminPost>>
+>;
+export type GetAdminPostQueryError = ErrorType<void>;
+
+/**
+ * @summary Get a single post by ID regardless of published status (admin only)
+ */
+
+export function useGetAdminPost<
+  TData = Awaited<ReturnType<typeof getAdminPost>>,
+  TError = ErrorType<void>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getAdminPost>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetAdminPostQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List all events including unpublished (admin only)
+ */
+export const getListAdminEventsUrl = (params?: ListAdminEventsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/admin/events?${stringifiedParams}`
+    : `/api/admin/events`;
+};
+
+export const listAdminEvents = async (
+  params?: ListAdminEventsParams,
+  options?: RequestInit,
+): Promise<EventListResponse> => {
+  return customFetch<EventListResponse>(getListAdminEventsUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListAdminEventsQueryKey = (params?: ListAdminEventsParams) => {
+  return [`/api/admin/events`, ...(params ? [params] : [])] as const;
+};
+
+export const getListAdminEventsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listAdminEvents>>,
+  TError = ErrorType<void>,
+>(
+  params?: ListAdminEventsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listAdminEvents>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListAdminEventsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listAdminEvents>>> = ({
+    signal,
+  }) => listAdminEvents(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listAdminEvents>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListAdminEventsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listAdminEvents>>
+>;
+export type ListAdminEventsQueryError = ErrorType<void>;
+
+/**
+ * @summary List all events including unpublished (admin only)
+ */
+
+export function useListAdminEvents<
+  TData = Awaited<ReturnType<typeof listAdminEvents>>,
+  TError = ErrorType<void>,
+>(
+  params?: ListAdminEventsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listAdminEvents>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListAdminEventsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List all posts including unpublished (admin only)
+ */
+export const getListAdminPostsUrl = (params?: ListAdminPostsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/admin/posts?${stringifiedParams}`
+    : `/api/admin/posts`;
+};
+
+export const listAdminPosts = async (
+  params?: ListAdminPostsParams,
+  options?: RequestInit,
+): Promise<PostListResponse> => {
+  return customFetch<PostListResponse>(getListAdminPostsUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListAdminPostsQueryKey = (params?: ListAdminPostsParams) => {
+  return [`/api/admin/posts`, ...(params ? [params] : [])] as const;
+};
+
+export const getListAdminPostsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listAdminPosts>>,
+  TError = ErrorType<void>,
+>(
+  params?: ListAdminPostsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listAdminPosts>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListAdminPostsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listAdminPosts>>> = ({
+    signal,
+  }) => listAdminPosts(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listAdminPosts>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListAdminPostsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listAdminPosts>>
+>;
+export type ListAdminPostsQueryError = ErrorType<void>;
+
+/**
+ * @summary List all posts including unpublished (admin only)
+ */
+
+export function useListAdminPosts<
+  TData = Awaited<ReturnType<typeof listAdminPosts>>,
+  TError = ErrorType<void>,
+>(
+  params?: ListAdminPostsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listAdminPosts>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListAdminPostsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
  * @summary Subscribe to the newsletter
  */
 export const getSubscribeNewsletterUrl = () => {
@@ -2858,7 +3477,7 @@ export const useSubscribeNewsletter = <
 };
 
 /**
- * @summary List newsletter subscribers
+ * @summary List newsletter subscribers (admin only — subscriber PII)
  */
 export const getListNewsletterSubscribersUrl = (
   params?: ListNewsletterSubscribersParams,
@@ -2899,7 +3518,7 @@ export const getListNewsletterSubscribersQueryKey = (
 
 export const getListNewsletterSubscribersQueryOptions = <
   TData = Awaited<ReturnType<typeof listNewsletterSubscribers>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(
   params?: ListNewsletterSubscribersParams,
   options?: {
@@ -2931,15 +3550,15 @@ export const getListNewsletterSubscribersQueryOptions = <
 export type ListNewsletterSubscribersQueryResult = NonNullable<
   Awaited<ReturnType<typeof listNewsletterSubscribers>>
 >;
-export type ListNewsletterSubscribersQueryError = ErrorType<unknown>;
+export type ListNewsletterSubscribersQueryError = ErrorType<void>;
 
 /**
- * @summary List newsletter subscribers
+ * @summary List newsletter subscribers (admin only — subscriber PII)
  */
 
 export function useListNewsletterSubscribers<
   TData = Awaited<ReturnType<typeof listNewsletterSubscribers>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(
   params?: ListNewsletterSubscribersParams,
   options?: {

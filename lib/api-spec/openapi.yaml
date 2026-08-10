@@ -22,6 +22,10 @@ tags:
     description: Blog posts
   - name: newsletter
     description: Newsletter subscribers
+  - name: storage
+    description: Object storage upload and serving endpoints
+  - name: admin
+    description: Admin-only content management endpoints (requires auth + allowlist)
 
 paths:
   /healthz:
@@ -69,7 +73,7 @@ paths:
     post:
       operationId: createEvent
       tags: [events]
-      summary: Create a new event
+      summary: Create a new event (admin only)
       requestBody:
         required: true
         content:
@@ -83,6 +87,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
 
   /events/upcoming:
     get:
@@ -109,7 +117,7 @@ paths:
     get:
       operationId: getEventsSummary
       tags: [events]
-      summary: Aggregate stats — total events, upcoming count, total bookings
+      summary: Aggregate stats — total events, upcoming count, total bookings (admin only)
       responses:
         "200":
           description: Events summary stats
@@ -117,6 +125,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EventsSummary"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
 
   /events/{id}:
     get:
@@ -141,7 +153,7 @@ paths:
     put:
       operationId: updateEvent
       tags: [events]
-      summary: Update an event
+      summary: Update an event (admin only)
       parameters:
         - name: id
           in: path
@@ -161,10 +173,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
     delete:
       operationId: deleteEvent
       tags: [events]
-      summary: Delete an event
+      summary: Delete an event (admin only)
       parameters:
         - name: id
           in: path
@@ -174,6 +190,10 @@ paths:
       responses:
         "204":
           description: Deleted
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
 
   /events/{slug}/by-slug:
     get:
@@ -201,7 +221,7 @@ paths:
     get:
       operationId: listBookings
       tags: [bookings]
-      summary: List all bookings
+      summary: List all bookings (admin only — contains customer PII)
       parameters:
         - name: eventId
           in: query
@@ -229,6 +249,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BookingListResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
     post:
       operationId: createBooking
       tags: [bookings]
@@ -251,7 +275,7 @@ paths:
     get:
       operationId: getBooking
       tags: [bookings]
-      summary: Get booking by ID
+      summary: Get booking by ID (admin only)
       parameters:
         - name: id
           in: path
@@ -265,10 +289,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Booking"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
     patch:
       operationId: updateBookingStatus
       tags: [bookings]
-      summary: Update booking status
+      summary: Update booking status (admin only)
       parameters:
         - name: id
           in: path
@@ -288,13 +316,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Booking"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
 
   # ── Private Inquiries ────────────────────────────────────────────────────────
   /private-inquiries:
     get:
       operationId: listPrivateInquiries
       tags: [private-inquiries]
-      summary: List all private event inquiries
+      summary: List all private event inquiries (admin only — contains customer PII)
       parameters:
         - name: page
           in: query
@@ -313,6 +345,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PrivateInquiryListResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
     post:
       operationId: createPrivateInquiry
       tags: [private-inquiries]
@@ -335,7 +371,7 @@ paths:
     get:
       operationId: getPrivateInquiry
       tags: [private-inquiries]
-      summary: Get inquiry by ID
+      summary: Get inquiry by ID (admin only)
       parameters:
         - name: id
           in: path
@@ -349,10 +385,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PrivateInquiry"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
     delete:
       operationId: deletePrivateInquiry
       tags: [private-inquiries]
-      summary: Delete an inquiry
+      summary: Delete an inquiry (admin only)
       parameters:
         - name: id
           in: path
@@ -362,6 +402,10 @@ paths:
       responses:
         "204":
           description: Deleted
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
 
   # ── Gallery ──────────────────────────────────────────────────────────────────
   /gallery:
@@ -394,7 +438,7 @@ paths:
     post:
       operationId: createGalleryPhoto
       tags: [gallery]
-      summary: Add a gallery photo
+      summary: Add a gallery photo (admin only)
       requestBody:
         required: true
         content:
@@ -408,6 +452,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GalleryPhoto"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
 
   /gallery/featured:
     get:
@@ -466,7 +514,7 @@ paths:
     put:
       operationId: updateGalleryPhoto
       tags: [gallery]
-      summary: Update a gallery photo
+      summary: Update a gallery photo (admin only)
       parameters:
         - name: id
           in: path
@@ -486,10 +534,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GalleryPhoto"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
     delete:
       operationId: deleteGalleryPhoto
       tags: [gallery]
-      summary: Delete a gallery photo
+      summary: Delete a gallery photo (admin only)
       parameters:
         - name: id
           in: path
@@ -499,6 +551,10 @@ paths:
       responses:
         "204":
           description: Deleted
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
 
   # ── Blog Posts ───────────────────────────────────────────────────────────────
   /posts:
@@ -527,7 +583,7 @@ paths:
     post:
       operationId: createPost
       tags: [posts]
-      summary: Create a blog post
+      summary: Create a blog post (admin only)
       requestBody:
         required: true
         content:
@@ -541,6 +597,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Post"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
 
   /posts/recent:
     get:
@@ -584,7 +644,7 @@ paths:
     put:
       operationId: updatePost
       tags: [posts]
-      summary: Update a blog post
+      summary: Update a blog post (admin only)
       parameters:
         - name: id
           in: path
@@ -604,10 +664,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Post"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
     delete:
       operationId: deletePost
       tags: [posts]
-      summary: Delete a post
+      summary: Delete a post (admin only)
       parameters:
         - name: id
           in: path
@@ -617,6 +681,10 @@ paths:
       responses:
         "204":
           description: Deleted
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
 
   /posts/{slug}/by-slug:
     get:
@@ -638,6 +706,182 @@ paths:
                 $ref: "#/components/schemas/Post"
         "404":
           description: Not found
+
+  # ── Storage ──────────────────────────────────────────────────────────────────
+  /storage/uploads/request-url:
+    post:
+      tags: [storage]
+      operationId: requestUploadUrl
+      summary: Request a presigned URL for file upload
+      description: |
+        Returns a presigned GCS URL for direct upload. The client sends JSON
+        metadata here, then uploads the file directly to the returned URL.
+        Requires admin authentication.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadUrlRequest'
+      responses:
+        '200':
+          description: Presigned upload URL generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadUrlResponse'
+        '400':
+          description: Missing or invalid required fields
+        '401':
+          description: Unauthorized
+        '500':
+          description: Failed to generate upload URL
+
+  /storage/objects/{objectPath}:
+    get:
+      tags: [storage]
+      operationId: getStorageObject
+      summary: Serve an uploaded object by its path
+      parameters:
+        - name: objectPath
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Object content streamed
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Object not found
+
+  # ── Admin ─────────────────────────────────────────────────────────────────────
+  /admin/me:
+    get:
+      tags: [admin]
+      operationId: getAdminMe
+      summary: Returns the signed-in user's Clerk ID (any authenticated user — no admin allowlist required; used for initial ADMIN_USER_IDS setup)
+      responses:
+        '200':
+          description: Admin user info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminMe'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /admin/events/{id}:
+    get:
+      tags: [admin]
+      operationId: getAdminEvent
+      summary: Get a single event by ID regardless of published status (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Event record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+
+  /admin/posts/{id}:
+    get:
+      tags: [admin]
+      operationId: getAdminPost
+      summary: Get a single post by ID regardless of published status (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+
+  /admin/events:
+    get:
+      tags: [admin]
+      operationId: listAdminEvents
+      summary: List all events including unpublished (admin only)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: All events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventListResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /admin/posts:
+    get:
+      tags: [admin]
+      operationId: listAdminPosts
+      summary: List all posts including unpublished (admin only)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: All posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostListResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
 
   # ── Newsletter ───────────────────────────────────────────────────────────────
   /newsletter/subscribe:
@@ -665,7 +909,7 @@ paths:
     get:
       operationId: listNewsletterSubscribers
       tags: [newsletter]
-      summary: List newsletter subscribers
+      summary: List newsletter subscribers (admin only — subscriber PII)
       parameters:
         - name: page
           in: query
@@ -684,6 +928,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/NewsletterSubscriberListResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden — not in admin allowlist
 
 components:
   schemas:
@@ -1043,6 +1291,46 @@ components:
         meta:
           $ref: "#/components/schemas/PaginationMeta"
       required: [data, meta]
+
+    # ── Storage ────────────────────────────────────────────────────────────────
+    UploadUrlRequest:
+      type: object
+      required: [name, size, contentType]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: Original file name
+        size:
+          type: integer
+          minimum: 1
+          description: File size in bytes
+        contentType:
+          type: string
+          minLength: 1
+          description: MIME type (e.g. image/jpeg)
+
+    UploadUrlResponse:
+      type: object
+      required: [uploadURL, objectPath]
+      properties:
+        uploadURL:
+          type: string
+          format: uri
+          description: Presigned GCS URL for PUT upload
+        objectPath:
+          type: string
+          description: Normalized object path (e.g. /objects/uploads/uuid). Store in DB.
+        metadata:
+          $ref: '#/components/schemas/UploadUrlRequest'
+
+    # ── Admin ──────────────────────────────────────────────────────────────────
+    AdminMe:
+      type: object
+      required: [userId]
+      properties:
+        userId:
+          type: string
 
     # ── Newsletter ─────────────────────────────────────────────────────────────
     NewsletterSubscriber:

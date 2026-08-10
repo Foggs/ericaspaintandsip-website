@@ -6,6 +6,8 @@ import privateInquiriesRouter from "./privateInquiries";
 import galleryRouter from "./gallery";
 import postsRouter from "./posts";
 import newsletterRouter from "./newsletter";
+import storageRouter from "./storage";
+import adminRouter from "./admin";
 
 const router: IRouter = Router();
 
@@ -16,5 +18,7 @@ router.use(privateInquiriesRouter);
 router.use(galleryRouter);
 router.use(postsRouter);
 router.use(newsletterRouter);
+router.use(storageRouter);
+router.use(adminRouter);
 
 export default router;
