@@ -1,0 +1,48 @@
+Before writing any code, read these three files in full:
+1. `CLAUDE.md` — project conventions, data models, build cycle, feature specs
+2. `replit.md` — infrastructure constraints, routing, and critical gotchas
+3. `ericaspaintandsip_PRD.md` — full product requirements
+
+Once you have read all three, we will build Features 1, 2, and 3 in sequence.
+Do not start Feature 2 until Feature 1 is confirmed working.
+Do not start Feature 3 until Feature 2 is confirmed working.
+
+---
+
+## Feature 1 — Verify Project Scaffold
+
+### Description
+The CMS lives at artifacts/cms/ and is already bootstrapped by Replit as a
+Next.js 15 + Payload CMS 3.x workspace artifact. Verify the scaffold is
+correct and all mandatory Payload route files exist and are properly wired.
+
+### Files to Verify (do not recreate if already correct)
+- artifacts/cms/src/app/(payload)/layout.tsx           — must wrap RootLayout from @payloadcms/next/layouts
+- artifacts/cms/src/app/(payload)/admin/[[...segments]]/page.tsx
+- artifacts/cms/src/app/(payload)/admin/[[...segments]]/not-found.tsx
+- artifacts/cms/src/app/(payload)/admin/importMap.js
+- artifacts/cms/src/app/(payload)/api/[...slug]/route.ts  — REST_GET(config) not REST_GET({ config })
+- artifacts/cms/payload.config.ts                      — postgres adapter with push: NODE_ENV !== 'production'
+- artifacts/cms/next.config.mjs                        — must have basePath: "/cms"
+
+### Constraints
+- Package manager is pnpm — do not use npm
+- basePath: "/cms" must not change
+- Database is Replit's built-in PostgreSQL via DATABASE_URL — not MongoDB
+- REST_GET must receive config directly, not wrapped in an object
+- (payload)/layout.tsx is mandatory — do not skip or stub it
+- @/* path alias must resolve to ./src/*
+
+### Acceptance Criteria
+- [ ] pnpm dev starts without errors from artifacts/cms/
+- [ ] /cms loads (even a blank page is fine)
+- [ ] /cms/admin loads the Payload login screen
+- [ ] A new admin user can be created on first visit
+- [ ] /cms/api/globals returns a valid response (not a 500)
+- [ ] No TypeScript errors on build
+
+---
+
+PLAN ONLY. Do not write any code yet.
+Show me every file you intend to create or modify, and why.
+I will approve the plan before you implement.

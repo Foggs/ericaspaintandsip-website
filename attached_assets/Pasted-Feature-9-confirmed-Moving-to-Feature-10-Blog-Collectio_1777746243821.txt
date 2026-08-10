@@ -1,0 +1,48 @@
+Feature 9 confirmed. Moving to Feature 10 — Blog Collection and Blog Pages.
+
+Reference files: CLAUDE.md, ericaspaintandsip_PRD.md (Section 4.6)
+
+## Feature: Blog / News
+
+### Description
+A Payload Posts collection and two public pages: a blog listing at /cms/blog
+and individual post pages at /cms/blog/[slug].
+
+### Files Involved
+- artifacts/cms/collections/Posts.ts (new)
+- artifacts/cms/payload.config.ts (register Posts collection)
+- artifacts/cms/src/app/(frontend)/blog/page.tsx (new)
+- artifacts/cms/src/app/(frontend)/blog/[slug]/page.tsx (new)
+- artifacts/cms/components/blog/PostCard.tsx (new)
+- artifacts/cms/components/blog/PostContent.tsx (new — renders Lexical rich text)
+
+### Post data model
+- title — Text (required)
+- slug — Auto-generated from title
+- publishedDate — Date (required)
+- excerpt — Text (for listing cards, max ~200 chars)
+- content — Rich text (Payload Lexical editor)
+- coverImage — Upload relationship to Media (optional)
+- isPublished — Boolean (default: false)
+- timestamps: true
+
+### Constraints
+- Blog listing shows only published posts (isPublished: true) ordered by publishedDate desc
+- Post detail returns notFound() for unpublished or unknown slugs
+- generateMetadata must be implemented on the detail page
+- Rich text from Payload Lexical must be rendered — use @payloadcms/richtext-lexical's
+  RichText component or serialize manually; do NOT render raw JSON
+- Do NOT modify any existing collections
+
+### Acceptance Criteria
+- [ ] Posts collection appears in Payload admin at /cms/admin
+- [ ] A test post can be created, published, and saved
+- [ ] /cms/blog lists published posts ordered newest first
+- [ ] Unpublished posts do not appear on /cms/blog
+- [ ] /cms/blog/[slug] renders the full post with rich text content
+- [ ] notFound() returned for unknown or unpublished slugs
+- [ ] generateMetadata sets title and description on the detail page
+- [ ] Empty state renders gracefully on /cms/blog when no posts exist
+- [ ] No TypeScript errors
+
+PLAN ONLY. Show every file you intend to create or modify. I will approve before you implement.

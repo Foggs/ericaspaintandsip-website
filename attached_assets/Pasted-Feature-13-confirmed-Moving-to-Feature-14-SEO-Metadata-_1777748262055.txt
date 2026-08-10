@@ -1,0 +1,42 @@
+Feature 13 confirmed. Moving to Feature 14 — SEO Metadata and Sitemap.
+
+Reference files: CLAUDE.md (Non-Functional Requirements), ericaspaintandsip_PRD.md (Section 7)
+
+## Feature: SEO Metadata and Sitemap
+
+### Description
+Implement complete SEO metadata across all pages using Next.js generateMetadata API,
+add Open Graph images, and generate a sitemap.xml.
+
+### Files Involved
+- artifacts/cms/src/app/(frontend)/layout.tsx (base metadata)
+- artifacts/cms/src/app/(frontend)/events/page.tsx (page-level metadata)
+- artifacts/cms/src/app/(frontend)/events/[slug]/page.tsx (dynamic metadata — already has generateMetadata, verify completeness)
+- artifacts/cms/src/app/(frontend)/blog/[slug]/page.tsx (dynamic metadata — verify)
+- artifacts/cms/src/app/(frontend)/private-events/page.tsx
+- artifacts/cms/src/app/(frontend)/gallery/page.tsx
+- artifacts/cms/src/app/(frontend)/blog/page.tsx
+- artifacts/cms/src/app/(frontend)/contact/page.tsx
+- artifacts/cms/src/app/sitemap.ts (new — Next.js sitemap route)
+- artifacts/cms/src/app/robots.ts (new — robots.txt)
+
+### Constraints
+- Use Next.js Metadata API (generateMetadata) — not manual <head> tags
+- Dynamic pages (events/[slug], blog/[slug]) must generate title and description
+  from the actual record data
+- NEXT_PUBLIC_SITE_URL env var must be used as the canonical base URL
+- Sitemap must include: homepage, /events, all published event slugs,
+  /blog, all published post slugs, /gallery, /private-events, /contact
+- Do NOT add noindex to any public page
+- Do NOT modify any collection definitions or API routes
+
+### Acceptance Criteria
+- [ ] Every page has a unique, descriptive <title> tag
+- [ ] Every page has a meta description
+- [ ] Open Graph title and description are set on all pages
+- [ ] /cms/sitemap.xml returns valid XML listing all public URLs
+- [ ] /cms/robots.txt returns a valid robots.txt allowing all crawlers
+- [ ] Dynamic pages (event detail, blog post) use record data in their metadata
+- [ ] No TypeScript errors
+
+PLAN ONLY. Show every file you intend to create or modify. I will approve before you implement.

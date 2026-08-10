@@ -1,0 +1,40 @@
+{
+  "name": "@workspace/cms",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p ${PORT:-3001}",
+    "build": "next build",
+    "start": "next start -p ${PORT:-3001}",
+    "generate:types": "payload generate:types",
+    "generate:importmap": "payload generate:importmap",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@payloadcms/db-postgres": "3.84.1",
+    "@payloadcms/next": "3.84.1",
+    "@payloadcms/richtext-lexical": "3.84.1",
+    "@paypal/react-paypal-js": "^9.2.0",
+    "@tailwindcss/postcss": "catalog:",
+    "@tailwindcss/typography": "catalog:",
+    "clsx": "catalog:",
+    "framer-motion": "catalog:",
+    "graphql": "^16.9.0",
+    "next": "15.3.9",
+    "nodemailer": "^8.0.7",
+    "payload": "3.84.1",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "sharp": "^0.33.5",
+    "tailwind-merge": "catalog:",
+    "tailwindcss": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/nodemailer": "^8.0.0",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "^5.9.0"
+  }
+}
